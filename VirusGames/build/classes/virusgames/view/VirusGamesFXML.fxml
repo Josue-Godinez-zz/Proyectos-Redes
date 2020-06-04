@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" fx:id="root" prefHeight="676.0" prefWidth="1082.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="virusgames.controller.VirusGamesFXMLController">
+   <children>
+      <Button fx:id="btnJugar" layoutX="30.0" layoutY="14.0" mnemonicParsing="false" onAction="#changeView" prefHeight="25.0" prefWidth="70.0" text="Jugar" />
+      <Button fx:id="btnSalir" layoutX="128.0" layoutY="14.0" mnemonicParsing="false" onAction="#exit" prefHeight="25.0" prefWidth="70.0" text="Salir" />
+      <TabPane layoutX="256.0" layoutY="174.0" prefHeight="328.0" prefWidth="570.0" style="-fx-background-color: #004445;" tabClosingPolicy="UNAVAILABLE" tabMinWidth="264.0">
+         <tabs>
+            <Tab text="Crear Partida">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="454.0" prefWidth="692.0">
+                     <children>
+                        <Button fx:id="btnHost" layoutX="248.0" layoutY="109.0" mnemonicParsing="false" onAction="#OnActionbtnHost" prefHeight="34.0" prefWidth="83.0" text="Crear Juego" />
+                        <Button fx:id="btnComenzar" layoutX="254.0" layoutY="230.0" mnemonicParsing="false" onAction="#OnActionbtnComenzar" prefHeight="38.0" prefWidth="76.0" text="Comenzar" />
+                        <Text layoutX="229.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cantidad de Jugadores" />
+                        <Text fx:id="txtCantJugadores" layoutX="286.0" layoutY="208.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                        <Text fx:id="txtPlayerError" fill="RED" layoutX="133.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Necesita Almenos 2 Jugadores Para Comenzar Partida " textAlignment="CENTER" visible="false" wrappingWidth="308.0" />
+                        <TextField fx:id="tbUserHostName" alignment="CENTER" layoutX="215.0" layoutY="60.0" promptText="UserName" />
+                        <Text layoutX="233.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre De Usuario" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab closable="false" onSelectionChanged="#client" text="Unirse a Partida">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="btnJoin" layoutX="246.0" layoutY="183.0" mnemonicParsing="false" onAction="#OnActionbtnCliente" prefHeight="36.0" prefWidth="80.0" text="Unirse" />
+                        <Text layoutX="252.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IP del Host" wrappingWidth="66.13671875" />
+                        <TextField fx:id="tbIPHost" alignment="CENTER" layoutX="211.0" layoutY="62.0" text="192.168.1.5" />
+                        <Text fx:id="txtError" fill="RED" layoutX="243.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+                        <Button fx:id="btnLogOut" layoutX="245.0" layoutY="235.0" mnemonicParsing="false" onAction="#desconectar" text="Desconectar" />
+                        <Text layoutX="231.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre De Jugador" />
+                        <TextField fx:id="tbUserName" alignment="CENTER" layoutX="210.0" layoutY="137.0" promptText="Usuario" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

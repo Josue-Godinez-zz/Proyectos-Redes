@@ -1,0 +1,194 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package virusgames.controller;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import virusgames.mazo.Carta;
+import virusgames.serviceconexion.Cliente;
+import virusgames.serviceconexion.Servidor;
+import virusgames.util.AppContext;
+
+/**
+ * FXML Controller class
+ *
+ * @author josue
+ */
+public class GameFXMLController extends Controller implements Initializable {
+
+    @FXML
+    private VBox vbMesa3;
+    @FXML
+    private VBox vbMesa2;
+    @FXML
+    private VBox vbMesa4;
+    @FXML
+    private VBox vbMesa5;
+    @FXML
+    private VBox vbMesa1;
+    @FXML
+    private VBox vbMesa6;
+    @FXML
+    private Button btnDrawCard;
+    @FXML
+    private AnchorPane root;
+    @FXML
+    private ImageView ivMazo;
+    
+    /*Variables Propias*/
+    //ObservableList<VBox> mesasDisponibles = FXCollections.observableArrayList();
+    public ArrayList<VBox> mesasDisponibles = new ArrayList<>();
+    public Servidor servidor;
+    public Cliente cliente;
+    LogicalGame logical;
+    public static Carta carta;
+    public HBox mesaPropia;
+    public ArrayList<HBox> mesaEnemigas;
+    Map<String, String> diccionario = new HashMap<>();
+    
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        servidor = (Servidor)AppContext.getInstance().get("servidor");
+        cliente = (Cliente)AppContext.getInstance().get("cliente");
+        
+        tableroDinamico(cliente.getCantidadJugadores());
+        /*Llenar Dicicionario Aqui*/
+        if(cliente.isHost)
+        {
+            generarJuego();
+            cargarLogical();
+        }
+        else
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GameFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            cargarJuego();
+            cargarLogical();
+            
+        }
+    }    
+
+    @Override
+    public void initialize() {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public void tableroDinamico(int cantidad)
+    {
+        if(cantidad == 2)
+        {
+            mesasDisponibles.add(vbMesa1);
+            mesasDisponibles.add(vbMesa2);
+            vbMesa3.setVisible(false);
+            vbMesa5.setVisible(false);
+            vbMesa4.setVisible(false);
+            vbMesa6.setVisible(false);
+        }
+        if(cantidad == 3)
+        {
+            mesasDisponibles.add(vbMesa1);
+            mesasDisponibles.add(vbMesa3);
+            mesasDisponibles.add(vbMesa4);
+            vbMesa5.setVisible(false);
+            vbMesa2.setVisible(false);
+            vbMesa6.setVisible(false);
+        }
+        if(cantidad == 4)
+        {
+            mesasDisponibles.add(vbMesa3);
+            mesasDisponibles.add(vbMesa5);
+            mesasDisponibles.add(vbMesa4);
+            mesasDisponibles.add(vbMesa6);
+            vbMesa2.setVisible(false);
+            vbMesa1.setVisible(false);
+        }
+        if(cantidad == 5)
+        {
+            mesasDisponibles.add(vbMesa2);
+            mesasDisponibles.add(vbMesa3);
+            mesasDisponibles.add(vbMesa4);
+            mesasDisponibles.add(vbMesa5);
+            mesasDisponibles.add(vbMesa6);
+            vbMesa1.setVisible(false);
+        }
+        if(cantidad == 6) 
+        {
+          mesasDisponibles.add(vbMesa1);
+          mesasDisponibles.add(vbMesa2);
+          mesasDisponibles.add(vbMesa3);
+          mesasDisponibles.add(vbMesa4);
+          mesasDisponibles.add(vbMesa5);
+          mesasDisponibles.add(vbMesa6);
+        }
+    }
+    
+    public void generarJuego()
+    {
+        logical = new LogicalGame(cliente.cantidadPlayer);
+        servidor.enviarJuego(logical);
+    }
+    
+    public void cargarJuego()
+    {
+        logical = cliente.getJuego();
+    }
+    
+    public void cargarLogical()
+    {
+        if(logical != null)
+        {
+            for(int x = 0; x < logical.cantidadJugadores; x++)
+            {
+                HBox aux = (HBox) mesasDisponibles.get(x).getChildren().get(1);
+                ArrayList<Carta> manoJugador = logical.mazoJugadores.get(x);
+                for(int y = 0 ; y < 3; y++)
+                {
+                    String img = (String) manoJugador.get(y).imgCarta;
+                    ImageView carta = new ImageView(new Image(img));
+                    carta.setFitHeight(85);
+                    carta.setFitWidth(62);
+                    carta.setPreserveRatio(true);
+                    carta.setSmooth(true);
+                    definirMovimientos(carta, manoJugador.get(y));
+                    aux.getChildren().add(carta);
+                }
+            }
+        }
+    }
+    
+    public void definirMovimientos(ImageView carta, Carta card)
+    {
+       carta.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
+           System.out.println("click");
+
+       });
+    }
+
+    @FXML
+    private void changeCard(ActionEvent event) {
+    }
+}

@@ -1,0 +1,20 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+     
+}
+
+#btnDraw
+{
+    -fx-border-color: #999900;
+    -fx-border-style: dotted;
+    -fx-background-color: #9999ff;
+    -fx-shape: "M 150 350 Q 200 250 150 150 C 200 200 250 150 300 200 C 350 150 400 200 450 150 Q 400 250 450 350 C 350 300 400 350 300 300 C 200 350 250 300 150 350 ";
+}
+
+#btnDraw :hover
+{
+    -fx-background-color: #66ff66;
+}
