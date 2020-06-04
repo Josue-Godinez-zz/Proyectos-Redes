@@ -1,0 +1,33 @@
+id:
+1 - Organo
+2 - Virus
+3 - Medicina
+4 - Tratamiento
+5 - Comodin
+
+color:
+
+1 - Amarillo
+2 - Azul
+3 - Rojo
+4 - Verde
+5 - Comodin
+0 - Tratamiento
+
+tipo de comodin:
+
+1 - Virus
+2 - Organo
+3 - Medicina
+
+tipo de tratamiento:
+
+1- Transplante
+2- Error Medico
+3- Contagio
+4- Guante de latex
+5- Ladron de Organos
+
+concepto
+diferencia y similitudes
+ventajas y desventajas (Comparacion)
