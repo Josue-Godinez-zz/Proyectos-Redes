@@ -82,8 +82,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
             FlowController.getInstance().goViewInStage("GameFXML", (Stage)root.getScene().getWindow(), true);
         });
         
-        diccionario.put("M1", virusgames.VirusGames.class.getResource("resource/M1.png").toString());
-        diccionario.put("M2", virusgames.VirusGames.class.getResource("resource/M2.png").toString());
+       
     }
      @Override
     public void initialize() {

@@ -62,7 +62,7 @@ public class GameFXMLController extends Controller implements Initializable {
     public static Carta carta;
     public HBox mesaPropia;
     public ArrayList<HBox> mesaEnemigas;
-    Map<String, String> diccionario = new HashMap<>();
+    Map<String, String> diccionario;
     
     /**
      * Initializes the controller class.
@@ -73,7 +73,7 @@ public class GameFXMLController extends Controller implements Initializable {
         cliente = (Cliente)AppContext.getInstance().get("cliente");
         
         tableroDinamico(cliente.getCantidadJugadores());
-        /*Llenar Dicicionario Aqui*/
+        generarDiccionario();
         if(cliente.isHost)
         {
             generarJuego();
@@ -95,6 +95,10 @@ public class GameFXMLController extends Controller implements Initializable {
     @Override
     public void initialize() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @FXML
+    private void changeCard(ActionEvent event) {
     }
     
     public void tableroDinamico(int cantidad)
@@ -168,7 +172,7 @@ public class GameFXMLController extends Controller implements Initializable {
                 for(int y = 0 ; y < 3; y++)
                 {
                     String img = (String) manoJugador.get(y).imgCarta;
-                    ImageView carta = new ImageView(new Image(img));
+                    ImageView carta = new ImageView(new Image(diccionario.get(img)));
                     carta.setFitHeight(85);
                     carta.setFitWidth(62);
                     carta.setPreserveRatio(true);
@@ -188,7 +192,28 @@ public class GameFXMLController extends Controller implements Initializable {
        });
     }
 
-    @FXML
-    private void changeCard(ActionEvent event) {
+    public void generarDiccionario()
+    {
+        diccionario = new HashMap<>();
+        diccionario.put("O1", virusgames.VirusGames.class.getResource("resource/O1.png").toString());
+        diccionario.put("O2", virusgames.VirusGames.class.getResource("resource/O2.png").toString());
+        diccionario.put("O3", virusgames.VirusGames.class.getResource("resource/O3.png").toString());
+        diccionario.put("O4", virusgames.VirusGames.class.getResource("resource/O4.png").toString());
+        diccionario.put("V1", virusgames.VirusGames.class.getResource("resource/V1.png").toString());
+        diccionario.put("V2", virusgames.VirusGames.class.getResource("resource/V2.png").toString());
+        diccionario.put("V3", virusgames.VirusGames.class.getResource("resource/V3.png").toString());
+        diccionario.put("V4", virusgames.VirusGames.class.getResource("resource/V4.png").toString());
+        diccionario.put("M1", virusgames.VirusGames.class.getResource("resource/M1.png").toString());
+        diccionario.put("M2", virusgames.VirusGames.class.getResource("resource/M2.png").toString());
+        diccionario.put("M3", virusgames.VirusGames.class.getResource("resource/M3.png").toString());
+        diccionario.put("M4", virusgames.VirusGames.class.getResource("resource/M4.png").toString());
+        diccionario.put("T1", virusgames.VirusGames.class.getResource("resource/T1.png").toString());
+        diccionario.put("T2", virusgames.VirusGames.class.getResource("resource/T2.png").toString());
+        diccionario.put("T3", virusgames.VirusGames.class.getResource("resource/T3.png").toString());
+        diccionario.put("T4", virusgames.VirusGames.class.getResource("resource/T4.png").toString());
+        diccionario.put("T5", virusgames.VirusGames.class.getResource("resource/T5.png").toString());
+        diccionario.put("C1", virusgames.VirusGames.class.getResource("resource/C1.png").toString());
+        diccionario.put("C2", virusgames.VirusGames.class.getResource("resource/C2.png").toString());
+        diccionario.put("C3", virusgames.VirusGames.class.getResource("resource/C3.png").toString());
     }
 }

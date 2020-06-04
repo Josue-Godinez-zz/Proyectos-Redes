@@ -55,36 +55,36 @@ public final class LogicalGame implements Serializable{
             {
                 if(x == 1) //Cartas Amarillas
                 {
-                    organ = new Organo(x, virusgames.VirusGames.class.getResource("resource/O1.png").toString(), 0);
-                    virus = new Virus(x, virusgames.VirusGames.class.getResource("resource/V1.png").toString(), 0);
-                    medicine = new Medicina(x, virusgames.VirusGames.class.getResource("resource/M1.png").toString(), 0);
+                    organ = new Organo(x, "O1", 0);
+                    virus = new Virus(x, "V1", 0);
+                    medicine = new Medicina(x, "M1", 0);
                     mazo.add(organ);
                     mazo.add(virus);
                     mazo.add(medicine);
                 }
                 if(x == 2) //Cartas Azules
                 {
-                    organ = new Organo(x, virusgames.VirusGames.class.getResource("resource/O2.png").toString(), 0);
-                    virus = new Virus(x, virusgames.VirusGames.class.getResource("resource/V2.png").toString(), 0);
-                    medicine = new Medicina(x, virusgames.VirusGames.class.getResource("resource/M2.png").toString(), 0);
+                    organ = new Organo(x, "O2", 0);
+                    virus = new Virus(x, "V2", 0);
+                    medicine = new Medicina(x, "M2", 0);
                     mazo.add(organ);
                     mazo.add(virus);
                     mazo.add(medicine);
                 }
                 if(x == 3) //Cartas Rojos
                 {
-                    organ = new Organo(x, virusgames.VirusGames.class.getResource("resource/O3.png").toString(), 0);
-                    virus = new Virus(x, virusgames.VirusGames.class.getResource("resource/V3.png").toString(), 0);
-                    medicine = new Medicina(x, virusgames.VirusGames.class.getResource("resource/M3.png").toString(), 0);
+                    organ = new Organo(x, "O3", 0);
+                    virus = new Virus(x, "V3", 0);
+                    medicine = new Medicina(x, "M3", 0);
                     mazo.add(organ);
                     mazo.add(virus);
                     mazo.add(medicine);
                 }
                 if(x == 4) //Cartas Verde
                 {
-                    organ = new Organo(x, virusgames.VirusGames.class.getResource("resource/O4.png").toString(), 0);
-                    virus = new Virus(x, virusgames.VirusGames.class.getResource("resource/V4.png").toString(), 0);
-                    medicine = new Medicina(x, virusgames.VirusGames.class.getResource("resource/M4.png").toString(), 0);
+                    organ = new Organo(x, "O4", 0);
+                    virus = new Virus(x, "V4", 0);
+                    medicine = new Medicina(x, "M4", 0);
                     mazo.add(organ);
                     mazo.add(virus);
                     mazo.add(medicine);
@@ -95,48 +95,48 @@ public final class LogicalGame implements Serializable{
         {
             if(x == 1)
             {
-                organ = new Organo(x, virusgames.VirusGames.class.getResource("resource/O1.png").toString(), 0);
+                organ = new Organo(x, "O1", 0);
                 mazo.add(organ);
             }
             if(x == 2)
             {
-                organ = new Organo(x, virusgames.VirusGames.class.getResource("resource/O2.png").toString(), 0);
+                organ = new Organo(x, "O2", 0);
                 mazo.add(organ);
             }
             if(x == 3)
             {
-                organ = new Organo(x,virusgames.VirusGames.class.getResource("resource/O3.png").toString(), 0);
+                organ = new Organo(x, "O3", 0);
                 mazo.add(organ);
             }
             if(x == 4)
             {
-                organ = new Organo(x, virusgames.VirusGames.class.getResource("resource/O4.png").toString(), 0);
+                organ = new Organo(x, "O4", 0);
                 mazo.add(organ);
             }
             if(x == 5)
             {
-                comodin = new Comodin(x, 1, virusgames.VirusGames.class.getResource("resource/C1.png").toString(), 0);
+                comodin = new Comodin(x, 1, "C1", 0);
                 mazo.add(comodin);
-                comodin = new Comodin(x, 2, virusgames.VirusGames.class.getResource("resource/C2.png").toString(), 0);
+                comodin = new Comodin(x, 2, "C2", 0);
                 mazo.add(comodin);
                 for(int t = 1; t < 5; t++)
                 {
-                    comodin = new Comodin(x, 3, virusgames.VirusGames.class.getResource("resource/C3.png").toString(), 0);
+                    comodin = new Comodin(x, 3, "C3", 0);
                     mazo.add(comodin);
                 }
             }
         }
         for(int x = 0; x < 2; x++)
         {
-            tratamiento = new Tratamiento(0, 1, virusgames.VirusGames.class.getResource("resource/T1.png").toString(), 0);
+            tratamiento = new Tratamiento(0, 1, "T1", 0);
             mazo.add(tratamiento);
-            tratamiento = new Tratamiento(0, 2, virusgames.VirusGames.class.getResource("resource/T2.png").toString(), 0);
+            tratamiento = new Tratamiento(0, 2, "T2", 0);
             mazo.add(tratamiento);
-            tratamiento = new Tratamiento(0, 3, virusgames.VirusGames.class.getResource("resource/T3.png").toString(), 0);
+            tratamiento = new Tratamiento(0, 3, "T3", 0);
             mazo.add(tratamiento);
-            tratamiento = new Tratamiento(0, 4, virusgames.VirusGames.class.getResource("resource/T4.png").toString(), 0);
+            tratamiento = new Tratamiento(0, 4, "T4", 0);
             mazo.add(tratamiento);
-            tratamiento = new Tratamiento(0, 5, virusgames.VirusGames.class.getResource("resource/T5.png").toString(), 0);
+            tratamiento = new Tratamiento(0, 5, "T5", 0);
             mazo.add(tratamiento);
         }
         
