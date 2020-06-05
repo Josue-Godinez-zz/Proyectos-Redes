@@ -66,9 +66,7 @@ public class ServidorHilo extends Thread {
                 }
                 
                 object = null;
-            } catch (IOException ex) {
-                Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

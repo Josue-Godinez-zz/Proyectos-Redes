@@ -68,7 +68,6 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     public Servidor servidor;
     public Cliente cliente;
     public Boolean isHost;
-    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -106,7 +105,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
             servidor = new Servidor(cantidadJugador);
             servidor.iniciarProceso();
             
-            cliente = new Cliente("26.157.65.73");
+            cliente = new Cliente("25.102.38.188");
             cliente.nuevoClient(0, tbUserHostName.getText(), 0);
             cliente.isHost = true;
             

@@ -54,7 +54,6 @@ public class GameFXMLController extends Controller implements Initializable {
     private ImageView ivMazo;
     
     /*Variables Propias*/
-    //ObservableList<VBox> mesasDisponibles = FXCollections.observableArrayList();
     public ArrayList<VBox> mesasDisponibles = new ArrayList<>();
     public Servidor servidor;
     public Cliente cliente;
@@ -62,8 +61,10 @@ public class GameFXMLController extends Controller implements Initializable {
     public static Carta carta;
     public HBox mesaPropia;
     public ArrayList<HBox> mesaEnemigas;
+    public int changeCard;
     Map<String, String> diccionario;
-    
+    public ArrayList<Carta> cartasSelecionada = new ArrayList<>();
+    public int cantidadCartas = 0;
     /**
      * Initializes the controller class.
      */
@@ -90,6 +91,29 @@ public class GameFXMLController extends Controller implements Initializable {
             cargarLogical();
             
         }
+        
+        ivMazo.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
+            cantidadCartas++;
+            if(cantidadCartas == 1)
+            {
+                btnDrawCard.setDisable(false);
+                btnDrawCard.setText("DRAW <"+cantidadCartas+">");
+            }
+            if(cantidadCartas == 2)
+            {
+                btnDrawCard.setText("DRAW <"+cantidadCartas+">");
+            }
+            if(cantidadCartas == 3)
+            {
+                btnDrawCard.setText("DRAW <"+cantidadCartas+">");
+            }
+            if(cantidadCartas == 4)
+            {
+                btnDrawCard.setDisable(true);
+                btnDrawCard.setText("DRAW");
+                cantidadCartas = 0;
+            }
+        });
     }    
 
     @Override
@@ -99,6 +123,7 @@ public class GameFXMLController extends Controller implements Initializable {
     
     @FXML
     private void changeCard(ActionEvent event) {
+        
     }
     
     public void tableroDinamico(int cantidad)
@@ -188,7 +213,7 @@ public class GameFXMLController extends Controller implements Initializable {
     {
        carta.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
            System.out.println("click");
-
+           
        });
     }
 
