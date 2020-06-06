@@ -77,9 +77,6 @@ public class GameFXMLController extends Controller implements Initializable {
     public Servidor servidor;
     public Cliente cliente;
     public LogicalGame logical;
-    public static Carta carta;
-    public HBox mesaPropia;
-    public ArrayList<HBox> mesaEnemigas;
     public Map<String, String> diccionario;
     public SimpleIntegerProperty turnoActual = new SimpleIntegerProperty(0);
     public int jugadorTurno = 1;
@@ -89,6 +86,9 @@ public class GameFXMLController extends Controller implements Initializable {
     public Carta cartaSeleccionada = null;
     public ImageView cartaSeleccionadaIV = null;
     public ArrayList<Carta> cartasSelecionada = new ArrayList<>();
+    public HBox mesaPropia;
+    public HBox cartasPropias;
+    public ArrayList<HBox> mesaEnemigas;
     
     /**
      * Initializes the controller class.
@@ -104,6 +104,7 @@ public class GameFXMLController extends Controller implements Initializable {
         });
         
         tableroDinamico(cliente.getCantidadJugadores());
+        asignacionMesas(cliente.getCantidadJugadores());
         generarDiccionario();
         if(cliente.isHost)
         {
@@ -282,7 +283,6 @@ public class GameFXMLController extends Controller implements Initializable {
                         cartaSeleccionada = card;
                         cartaSeleccionadaIV = carta;
                         cartaSeleccionadaIV.setOpacity(0.5);
-                        System.out.println(tipoCarta(cartaSeleccionada));
                         eleccionTipoCarta();
                    }
                    else
@@ -303,9 +303,6 @@ public class GameFXMLController extends Controller implements Initializable {
                        }
                    }  
                }
-               
-                //cartaSeleccionada = card;
-                
            }
            
            
@@ -382,7 +379,22 @@ public class GameFXMLController extends Controller implements Initializable {
     }
     public void moverOrgano()
     {
-        System.out.println("Organo");
+        mesaPropia.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
+            System.out.println("Organo");
+            if(mesaPropia.getChildren().isEmpty())
+            {
+                mesaPropia.getChildren().add(cartaSeleccionadaIV);
+                cartasPropias.getChildren().remove(cartaSeleccionadaIV);
+                cartaSeleccionadaIV.setOpacity(1);
+            }
+            else
+            {
+                mesaPropia.getChildren().add(cartaSeleccionadaIV);
+                cartasPropias.getChildren().remove(cartaSeleccionadaIV);
+                cartaSeleccionadaIV.setOpacity(1);
+            }
+        });
+        
     }
     
     public void moverVirus()
@@ -393,5 +405,177 @@ public class GameFXMLController extends Controller implements Initializable {
     private void moverMedicina() 
     {
         System.out.println("Medicina");
+    }
+    
+    public void asignacionMesas(int cantidad)
+    {
+        mesaEnemigas = new ArrayList<>();
+        switch (cantidad) {
+            case 2:
+                if(jugadorTurno == 1)
+                {
+                    mesaPropia = (HBox) vbMesa1.getChildren().get(0);
+                    cartasPropias = (HBox) vbMesa1.getChildren().get(1);
+                    mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
+                }
+                else if(jugadorTurno == 2)
+                {
+                    mesaPropia = (HBox) vbMesa2.getChildren().get(0);
+                    cartasPropias = (HBox) vbMesa2.getChildren().get(1);
+                    mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
+                }   break;
+            case 3:
+                switch (jugadorTurno) {
+                    case 1:
+                        mesaPropia = (HBox) vbMesa1.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa1.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        break;
+                    case 2:
+                        mesaPropia = (HBox) vbMesa3.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa3.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        break;
+                    case 3:
+                        mesaPropia = (HBox) vbMesa4.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa4.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        break;
+                }   break;
+            case 4:
+                switch (jugadorTurno) {
+                    case 1:
+                        mesaPropia = (HBox) vbMesa5.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa5.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 2:
+                        mesaPropia = (HBox) vbMesa3.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa3.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 3:
+                        mesaPropia = (HBox) vbMesa4.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa4.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 4:
+                        mesaPropia = (HBox) vbMesa6.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa6.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        break;
+                }   break;
+            case 5:
+                switch (jugadorTurno) {
+                    case 1:
+                        mesaPropia = (HBox) vbMesa5.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa5.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 2:
+                        mesaPropia = (HBox) vbMesa3.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa3.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 3:
+                        mesaPropia = (HBox) vbMesa2.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa2.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 4:
+                        mesaPropia = (HBox) vbMesa4.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa4.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 5:
+                        mesaPropia = (HBox) vbMesa6.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa6.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        break;
+                }   break;
+            case 6:
+                switch (jugadorTurno) {
+                    case 1:
+                        mesaPropia = (HBox) vbMesa1.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa1.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 2:
+                        mesaPropia = (HBox) vbMesa2.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa2.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 3:
+                        mesaPropia = (HBox) vbMesa3.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa3.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 4:
+                        mesaPropia = (HBox) vbMesa4.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa4.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 5:
+                        mesaPropia = (HBox) vbMesa5.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa5.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
+                        break;
+                    case 6:
+                        mesaPropia = (HBox) vbMesa6.getChildren().get(0);
+                        cartasPropias = (HBox) vbMesa6.getChildren().get(1);
+                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
+                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
+                        break;
+                }   break;
+        }
     }
 }
