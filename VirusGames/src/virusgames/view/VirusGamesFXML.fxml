@@ -22,7 +22,7 @@
                         <Text layoutX="229.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cantidad de Jugadores" />
                         <Text fx:id="txtCantJugadores" layoutX="286.0" layoutY="208.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                         <Text fx:id="txtPlayerError" fill="RED" layoutX="133.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Necesita Almenos 2 Jugadores Para Comenzar Partida " textAlignment="CENTER" visible="false" wrappingWidth="308.0" />
-                        <TextField fx:id="tbUserHostName" alignment="CENTER" layoutX="215.0" layoutY="60.0" promptText="UserName" />
+                        <TextField fx:id="tbUserHostName" alignment="CENTER" layoutX="215.0" layoutY="60.0" promptText="User Name" />
                         <Text layoutX="233.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre De Usuario" />
                      </children>
                   </AnchorPane>
@@ -33,8 +33,8 @@
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="btnJoin" layoutX="246.0" layoutY="183.0" mnemonicParsing="false" onAction="#OnActionbtnCliente" prefHeight="36.0" prefWidth="80.0" text="Unirse" />
-                        <Text layoutX="252.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IP del Host" wrappingWidth="66.13671875" />
-                        <TextField fx:id="tbIPHost" alignment="CENTER" layoutX="211.0" layoutY="62.0" text="192.168.1.5" />
+                        <Text layoutX="256.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IP del Host" wrappingWidth="60.13671875" />
+                        <TextField fx:id="tbIPHost" alignment="CENTER" layoutX="211.0" layoutY="62.0" promptText="IP Host" text="192.168.1.5" />
                         <Text fx:id="txtError" fill="RED" layoutX="243.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" />
                         <Button fx:id="btnLogOut" layoutX="245.0" layoutY="235.0" mnemonicParsing="false" onAction="#desconectar" text="Desconectar" />
                         <Text layoutX="231.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre De Jugador" />

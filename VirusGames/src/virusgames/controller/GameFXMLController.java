@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,7 +23,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import virusgames.mazo.Carta;
+import virusgames.mazo.Comodin;
+import virusgames.mazo.Medicina;
+import virusgames.mazo.Organo;
+import virusgames.mazo.Tratamiento;
+import virusgames.mazo.Virus;
 import virusgames.serviceconexion.Cliente;
 import virusgames.serviceconexion.Servidor;
 import virusgames.util.AppContext;
@@ -52,19 +59,37 @@ public class GameFXMLController extends Controller implements Initializable {
     private AnchorPane root;
     @FXML
     private ImageView ivMazo;
+    @FXML
+    private Text txtPlayer3;
+    @FXML
+    private Text txtPlayer2;
+    @FXML
+    private Text txtPlayer4;
+    @FXML
+    private Text txtPlayer1;
+    @FXML
+    private Text txtPlayer5;
+    @FXML
+    private Text txtPlayer6;
     
     /*Variables Propias*/
     public ArrayList<VBox> mesasDisponibles = new ArrayList<>();
     public Servidor servidor;
     public Cliente cliente;
-    LogicalGame logical;
+    public LogicalGame logical;
     public static Carta carta;
     public HBox mesaPropia;
     public ArrayList<HBox> mesaEnemigas;
-    public int changeCard;
-    Map<String, String> diccionario;
-    public ArrayList<Carta> cartasSelecionada = new ArrayList<>();
+    public Map<String, String> diccionario;
+    public SimpleIntegerProperty turnoActual = new SimpleIntegerProperty(0);
+    public int jugadorTurno = 1;
+    
+    /*Variables Relacionada Con La Jugabilidad*/
     public int cantidadCartas = 0;
+    public Carta cartaSeleccionada = null;
+    public ImageView cartaSeleccionadaIV = null;
+    public ArrayList<Carta> cartasSelecionada = new ArrayList<>();
+    
     /**
      * Initializes the controller class.
      */
@@ -72,6 +97,11 @@ public class GameFXMLController extends Controller implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         servidor = (Servidor)AppContext.getInstance().get("servidor");
         cliente = (Cliente)AppContext.getInstance().get("cliente");
+        turnoActual.set(1);
+        
+        turnoActual.addListener(t->{
+            /*Refrescar/Actualizar la vista*/
+        });
         
         tableroDinamico(cliente.getCantidadJugadores());
         generarDiccionario();
@@ -83,7 +113,7 @@ public class GameFXMLController extends Controller implements Initializable {
         else
         {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(250);
             } catch (InterruptedException ex) {
                 Logger.getLogger(GameFXMLController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -123,7 +153,7 @@ public class GameFXMLController extends Controller implements Initializable {
     
     @FXML
     private void changeCard(ActionEvent event) {
-        
+        System.out.println("Quiere Cambiar " +cantidadCartas+ " cartas");
     }
     
     public void tableroDinamico(int cantidad)
@@ -131,47 +161,74 @@ public class GameFXMLController extends Controller implements Initializable {
         if(cantidad == 2)
         {
             mesasDisponibles.add(vbMesa1);
+            txtPlayer1.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa2);
+            txtPlayer2.setText(cliente.getUsersName().get(1));
             vbMesa3.setVisible(false);
+            txtPlayer3.setVisible(false);
             vbMesa5.setVisible(false);
+            txtPlayer5.setVisible(false);
             vbMesa4.setVisible(false);
+            txtPlayer4.setVisible(false);
             vbMesa6.setVisible(false);
+            txtPlayer6.setVisible(false);
         }
         if(cantidad == 3)
         {
             mesasDisponibles.add(vbMesa1);
+            txtPlayer1.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa3);
+            txtPlayer3.setText(cliente.getUsersName().get(1));
             mesasDisponibles.add(vbMesa4);
+            txtPlayer4.setText(cliente.getUsersName().get(2));
             vbMesa5.setVisible(false);
+            txtPlayer5.setVisible(false);
             vbMesa2.setVisible(false);
+            txtPlayer2.setVisible(false);
             vbMesa6.setVisible(false);
+            txtPlayer6.setVisible(false);
         }
         if(cantidad == 4)
         {
             mesasDisponibles.add(vbMesa3);
+            txtPlayer4.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa5);
+            txtPlayer5.setText(cliente.getUsersName().get(1));
             mesasDisponibles.add(vbMesa4);
+            txtPlayer4.setText(cliente.getUsersName().get(2));
             mesasDisponibles.add(vbMesa6);
+            txtPlayer6.setText(cliente.getUsersName().get(3));
             vbMesa2.setVisible(false);
             vbMesa1.setVisible(false);
         }
         if(cantidad == 5)
         {
             mesasDisponibles.add(vbMesa2);
+            txtPlayer2.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa3);
+            txtPlayer3.setText(cliente.getUsersName().get(1));
             mesasDisponibles.add(vbMesa4);
+            txtPlayer4.setText(cliente.getUsersName().get(2));
             mesasDisponibles.add(vbMesa5);
+            txtPlayer5.setText(cliente.getUsersName().get(3));
             mesasDisponibles.add(vbMesa6);
+            txtPlayer6.setText(cliente.getUsersName().get(4));
             vbMesa1.setVisible(false);
         }
         if(cantidad == 6) 
         {
           mesasDisponibles.add(vbMesa1);
+          txtPlayer1.setText(cliente.getUsersName().get(0));
           mesasDisponibles.add(vbMesa2);
+          txtPlayer2.setText(cliente.getUsersName().get(1));
           mesasDisponibles.add(vbMesa3);
+          txtPlayer3.setText(cliente.getUsersName().get(2));
           mesasDisponibles.add(vbMesa4);
+          txtPlayer4.setText(cliente.getUsersName().get(3));
           mesasDisponibles.add(vbMesa5);
+          txtPlayer5.setText(cliente.getUsersName().get(4));
           mesasDisponibles.add(vbMesa6);
+          txtPlayer6.setText(cliente.getUsersName().get(5));
         }
     }
     
@@ -212,11 +269,76 @@ public class GameFXMLController extends Controller implements Initializable {
     public void definirMovimientos(ImageView carta, Carta card)
     {
        carta.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
-           System.out.println("click");
+           if(cantidadCartas != 0)
+           {
+                System.out.println("saco carta");
+           }
+           else
+           {
+               if(card.jugador == turnoActual.getValue())
+               {
+                   if(cartaSeleccionada == null)
+                   {
+                        cartaSeleccionada = card;
+                        cartaSeleccionadaIV = carta;
+                        cartaSeleccionadaIV.setOpacity(0.5);
+                        System.out.println(tipoCarta(cartaSeleccionada));
+                        eleccionTipoCarta();
+                   }
+                   else
+                   {
+                       if(cartaSeleccionada == card)
+                       {
+                           cartaSeleccionadaIV.setOpacity(1);
+                           cartaSeleccionadaIV = null;
+                           cartaSeleccionada = null;
+                       }
+                       else
+                       {
+                           cartaSeleccionadaIV.setOpacity(1);
+                           cartaSeleccionadaIV = carta;
+                           cartaSeleccionadaIV.setOpacity(0.5);
+                           cartaSeleccionada = card;
+                           eleccionTipoCarta();
+                       }
+                   }  
+               }
+               
+                //cartaSeleccionada = card;
+                
+           }
+           
            
        });
     }
 
+    public int tipoCarta(Carta carta)
+    {
+        if (carta instanceof Organo)
+        {
+            return 1;
+        }
+        if(carta instanceof Virus)
+        {
+            return 2;
+        }
+        if(carta instanceof Medicina)
+        {
+            return 3;
+        }
+        if(carta instanceof Tratamiento)
+        {
+            return 4;
+        }
+        if(carta instanceof Comodin)
+        {
+            return 5;
+        }
+        else
+        {
+            return 0;
+        }
+    }
     public void generarDiccionario()
     {
         diccionario = new HashMap<>();
@@ -240,5 +362,36 @@ public class GameFXMLController extends Controller implements Initializable {
         diccionario.put("C1", virusgames.VirusGames.class.getResource("resource/C1.png").toString());
         diccionario.put("C2", virusgames.VirusGames.class.getResource("resource/C2.png").toString());
         diccionario.put("C3", virusgames.VirusGames.class.getResource("resource/C3.png").toString());
+    }
+    
+    public void eleccionTipoCarta()
+    {
+        switch(tipoCarta(cartaSeleccionada))
+        {
+            case 1: moverOrgano();
+                break;
+            case 2: moverVirus();
+                break;
+            case 3: moverMedicina();
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+        }
+    }
+    public void moverOrgano()
+    {
+        System.out.println("Organo");
+    }
+    
+    public void moverVirus()
+    {
+        System.out.println("Virus");
+    }
+
+    private void moverMedicina() 
+    {
+        System.out.println("Medicina");
     }
 }

@@ -8,6 +8,7 @@ package virusgames.serviceconexion;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -36,6 +37,7 @@ class User extends Thread {
     Thread procesoCliente;
     public ArrayList<Object> paquete = new ArrayList<>();
     public LogicalGame juego = null;
+    public ArrayList<String> usersName;
     
     public User(int id)
     {
@@ -67,6 +69,7 @@ class User extends Thread {
                         {
                             escena = true;
                             cantidadJugadores = (int) paquete.get(1);
+                            usersName = (ArrayList<String>) paquete.get(2);
                         }
                         paquete = null;
                         paquete = (ArrayList<Object>) ois.readObject();
@@ -140,6 +143,11 @@ public class Cliente {
     public LogicalGame getJuego()
     {
         return user.juego;
+    }
+    
+    public ArrayList<String> getUsersName()
+    {
+        return user.usersName;
     }
     
 } 

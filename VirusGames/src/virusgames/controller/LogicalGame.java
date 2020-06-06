@@ -29,11 +29,6 @@ public final class LogicalGame implements Serializable{
     public int cantidadJugadores;
     public int turno = 1;
     
-    public LogicalGame()
-    {
-        
-    }
-    
     public LogicalGame(int cantidadJugadores)
     {
         this.cantidadJugadores = cantidadJugadores;

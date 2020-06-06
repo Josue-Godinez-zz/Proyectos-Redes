@@ -162,15 +162,14 @@ public class Formato {
         });
         return maxLengthFormat;
     }
+    
     public TextFormatter ipFormat() {
         TextFormatter numericFormat = new TextFormatter<>(c
                 -> {
             if (c.getControlNewText().isEmpty()) {
                 return c;
             }
-
-            //Pattern validDoubleText = Pattern.compile("\\d+");
-            Pattern validDoubleText = Pattern.compile("[0-9]{0,3} *+ (\\.[0-9]{0,3})?$");
+            Pattern validDoubleText = Pattern.compile(makePartialIPRegex());
             if (validDoubleText.matcher(c.getControlNewText()).matches()) {
                 return c;
             } else {
@@ -179,4 +178,12 @@ public class Formato {
         });
         return numericFormat;
     }
+    
+    public String makePartialIPRegex() {
+        String partialBlock = "(([0-9]{0,3})|(2[0-4][0-9])|(25[0-5]))" ;
+        String subsequentPartialBlock = "(\\."+partialBlock+")" ;
+        String ipAddress = partialBlock+"?"+subsequentPartialBlock+"{0,3}";
+        return "^"+ipAddress ;
+    }
+    
 }

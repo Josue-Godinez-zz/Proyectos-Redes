@@ -5,10 +5,14 @@
  */
 package virusgames.controller;
 
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
@@ -24,6 +28,7 @@ import virusgames.serviceconexion.Cliente;
 import virusgames.serviceconexion.Servidor;
 import virusgames.util.AppContext;
 import virusgames.util.FlowController;
+import virusgames.util.Formato;
 
 /**
  * FXML Controller class
@@ -81,7 +86,9 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
             FlowController.getInstance().goViewInStage("GameFXML", (Stage)root.getScene().getWindow(), true);
         });
         
-       
+       tbUserName.setTextFormatter(Formato.getInstance().maxLengthFormat(7));
+       tbIPHost.setTextFormatter(Formato.getInstance().ipFormat());
+       tbUserHostName.setTextFormatter(Formato.getInstance().maxLengthFormat(7));
     }
      @Override
     public void initialize() {
@@ -194,8 +201,9 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     
     @FXML
     private void changeView(ActionEvent event) {
-        System.out.println(diccionario.get("M2"));
-    }
+
+   }
+    
 
     @FXML
     private void exit(ActionEvent event) {

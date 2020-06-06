@@ -1,4 +1,4 @@
-id:
+id / instanceof:
 1 - Organo
 2 - Virus
 3 - Medicina

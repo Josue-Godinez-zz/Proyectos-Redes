@@ -77,9 +77,15 @@ public class ServidorHilo extends Thread {
         try
         {
             ArrayList<Object> paquete = new ArrayList<>();
+            ArrayList<String> usersname = new ArrayList<>();
+            for(ServidorHilo sh : clients)
+            {
+                usersname.add(sh.userName);
+            }
             boolean x = true;
             paquete.add(x);
             paquete.add(cantidad);
+            paquete.add(usersname);
             oos.writeObject(paquete);
         } catch (IOException ex) {
             Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
