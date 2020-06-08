@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -28,6 +29,7 @@ import virusgames.mazo.Carta;
 import virusgames.mazo.Comodin;
 import virusgames.mazo.Medicina;
 import virusgames.mazo.Organo;
+import virusgames.mazo.PersonalStackPane;
 import virusgames.mazo.Tratamiento;
 import virusgames.mazo.Virus;
 import virusgames.serviceconexion.Cliente;
@@ -89,6 +91,8 @@ public class GameFXMLController extends Controller implements Initializable {
     public HBox mesaPropia;
     public HBox cartasPropias;
     public ArrayList<HBox> mesaEnemigas;
+    public Jugador jugadorPropio;
+    public ArrayList<Jugador> jugadoresEnemigos;
     
     /**
      * Initializes the controller class.
@@ -100,12 +104,14 @@ public class GameFXMLController extends Controller implements Initializable {
         turnoActual.set(1);
         
         turnoActual.addListener(t->{
-            /*Refrescar/Actualizar la vista*/
+            /* Refrescar/Actualizar la vista*/
+
         });
         
         tableroDinamico(cliente.getCantidadJugadores());
-        asignacionMesas(cliente.getCantidadJugadores());
+        asignacionMesasInterfaz(cliente.getCantidadJugadores());
         generarDiccionario();
+        jugadorTurno = cliente.getTurno();
         if(cliente.isHost)
         {
             generarJuego();
@@ -123,6 +129,7 @@ public class GameFXMLController extends Controller implements Initializable {
             
         }
         
+        asignacionMesasCodigo(cliente.getCantidadJugadores());
         ivMazo.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
             cantidadCartas++;
             if(cantidadCartas == 1)
@@ -251,7 +258,7 @@ public class GameFXMLController extends Controller implements Initializable {
             for(int x = 0; x < logical.cantidadJugadores; x++)
             {
                 HBox aux = (HBox) mesasDisponibles.get(x).getChildren().get(1);
-                ArrayList<Carta> manoJugador = logical.mazoJugadores.get(x);
+                ArrayList<Carta> manoJugador = logical.players.get(x).getMano();
                 for(int y = 0 ; y < 3; y++)
                 {
                     String img = (String) manoJugador.get(y).imgCarta;
@@ -260,7 +267,10 @@ public class GameFXMLController extends Controller implements Initializable {
                     carta.setFitWidth(62);
                     carta.setPreserveRatio(true);
                     carta.setSmooth(true);
-                    definirMovimientos(carta, manoJugador.get(y));
+                    if(turnoActual.getValue() ==  jugadorTurno)
+                    {
+                        definirMovimientos(carta, manoJugador.get(y));
+                    }
                     aux.getChildren().add(carta);
                 }
             }
@@ -379,27 +389,49 @@ public class GameFXMLController extends Controller implements Initializable {
     }
     public void moverOrgano()
     {
-        mesaPropia.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
-            System.out.println("Organo");
-            if(mesaPropia.getChildren().isEmpty())
-            {
-                mesaPropia.getChildren().add(cartaSeleccionadaIV);
-                cartasPropias.getChildren().remove(cartaSeleccionadaIV);
-                cartaSeleccionadaIV.setOpacity(1);
+        System.out.println("ORGANO PARTE 1");
+        EventHandler event = e->
+        {
+            if(!cartaSeleccionada.isPlayed) {
+                System.out.println("ORGANO PARTE 2.1");
+                int color = cartaSeleccionada.colorCarta;
+                ArrayList<Carta> pilaColor = jugadorPropio.getJuegoPropio().get(color);
+                if (pilaColor.isEmpty()) {
+                    PersonalStackPane sp = new PersonalStackPane(color);
+                    cartaSeleccionada.isPlayed = true;
+                    pilaColor.add(cartaSeleccionada);
+                    logical.players.get(jugadorTurno - 1).getMano().remove(cartaSeleccionada);
+                    cartaSeleccionadaIV.setOpacity(1);
+                    HBox aux = (HBox) cartaSeleccionadaIV.getParent();
+                    aux.getChildren().remove(cartaSeleccionadaIV);
+                    sp.getChildren().add(cartaSeleccionadaIV);
+                    mesaPropia.getChildren().add(sp);
+                    mesaPropia.setOnMouseClicked(null);
+                    tomarCarta(1);
+                }
+                else
+                {
+                    System.out.println("ORGANO PARTE 2.2");
+                    System.out.println("Contiene un organo de este mismo color");
+                }
             }
             else
             {
-                mesaPropia.getChildren().add(cartaSeleccionadaIV);
-                cartasPropias.getChildren().remove(cartaSeleccionadaIV);
+                System.out.println("ORGANO PARTE 3");
+                cartaSeleccionada = null;
                 cartaSeleccionadaIV.setOpacity(1);
+                mesaPropia.setOnMouseClicked(null);
             }
-        });
+        };
+        //mesaPropia.addEventFilter(MouseEvent.MOUSE_CLICKED, event);
+        mesaPropia.setOnMouseClicked(event);
         
     }
     
     public void moverVirus()
     {
         System.out.println("Virus");
+        
     }
 
     private void moverMedicina() 
@@ -407,7 +439,7 @@ public class GameFXMLController extends Controller implements Initializable {
         System.out.println("Medicina");
     }
     
-    public void asignacionMesas(int cantidad)
+    public void asignacionMesasInterfaz(int cantidad)
     {
         mesaEnemigas = new ArrayList<>();
         switch (cantidad) {
@@ -578,4 +610,203 @@ public class GameFXMLController extends Controller implements Initializable {
                 }   break;
         }
     }
+    
+    public void tomarCarta(int cantidad)
+    {
+        Carta carta;
+        ImageView ivCarta;
+        
+        if(logical.cantidadJugadores == 2) /*Terminar*/
+        {
+            if(jugadorTurno == 1)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 1;
+                    logical.players.get(0).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 2)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 2;
+                    logical.players.get(1).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(null);
+                }
+            }
+        }
+    }
+
+    public void asignacionMesasCodigo(int cantidadJugadores) {
+        jugadoresEnemigos = new ArrayList<>();
+        if(cantidadJugadores == 2)
+        {
+            if(jugadorTurno == 1)
+            {
+                jugadorPropio = logical.getPlayers().get(0);
+                jugadoresEnemigos.add(logical.getPlayers().get(1));
+            }
+            else if(jugadorTurno == 2)
+            {
+                jugadorPropio = logical.getPlayers().get(1);
+                jugadoresEnemigos.add(logical.getPlayers().get(0));
+            }
+        }
+        else if(cantidadJugadores == 3)
+        {
+            switch (jugadorTurno) {
+                case 1:
+                    jugadorPropio = logical.getPlayers().get(0);
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    break;
+                case 2:
+                    jugadorPropio = logical.getPlayers().get(1);
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    break;
+                case 3:
+                    jugadorPropio = logical.getPlayers().get(2);
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    break;
+            }
+        }
+        else if(cantidadJugadores == 4)
+        {
+            switch (jugadorTurno) {
+                case 1:
+                    jugadorPropio = logical.getPlayers().get(0);
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    break;
+                case 2:
+                    jugadorPropio = logical.getPlayers().get(1);
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    break;
+                case 3:
+                    jugadorPropio = logical.getPlayers().get(2);
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    break;
+                case 4:
+                    jugadorPropio = logical.getPlayers().get(3);
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    break;
+            }
+        }
+        else if(cantidadJugadores == 4)
+        {
+            switch (jugadorTurno) {
+                case 1:
+                    jugadorPropio = logical.getPlayers().get(0);
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    jugadoresEnemigos.add(logical.getPlayers().get(4));
+                    break;
+                case 2:
+                    jugadorPropio = logical.getPlayers().get(1);
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    jugadoresEnemigos.add(logical.getPlayers().get(4));
+                    break;
+                case 3:
+                    jugadorPropio = logical.getPlayers().get(2);
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    jugadoresEnemigos.add(logical.getPlayers().get(4));
+                    break;
+                case 4:
+                    jugadorPropio = logical.getPlayers().get(3);
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    jugadoresEnemigos.add(logical.getPlayers().get(4));
+                    break;
+                case 5:
+                    jugadorPropio = logical.getPlayers().get(4);
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    break;
+            }
+        }
+        else if(jugadorTurno == 6)
+        {
+            switch (jugadorTurno) {
+                case 1:
+                    jugadorPropio = logical.getPlayers().get(0);
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    jugadoresEnemigos.add(logical.getPlayers().get(4));
+                    jugadoresEnemigos.add(logical.getPlayers().get(5));
+                    break;
+                case 2:
+                    jugadorPropio = logical.getPlayers().get(1);
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    jugadoresEnemigos.add(logical.getPlayers().get(4));
+                    jugadoresEnemigos.add(logical.getPlayers().get(5));
+                    break;
+                case 3:
+                    jugadorPropio = logical.getPlayers().get(2);
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    jugadoresEnemigos.add(logical.getPlayers().get(4));
+                    jugadoresEnemigos.add(logical.getPlayers().get(5));
+                    break;
+                case 4:
+                    jugadorPropio = logical.getPlayers().get(3);
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    jugadoresEnemigos.add(logical.getPlayers().get(4));
+                    jugadoresEnemigos.add(logical.getPlayers().get(5));
+                    break;
+                case 5:
+                    jugadorPropio = logical.getPlayers().get(4);
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    jugadoresEnemigos.add(logical.getPlayers().get(5));
+                    break;
+                case 6:
+                    jugadorPropio = logical.getPlayers().get(5);
+                    jugadoresEnemigos.add(logical.getPlayers().get(0));
+                    jugadoresEnemigos.add(logical.getPlayers().get(1));
+                    jugadoresEnemigos.add(logical.getPlayers().get(2));
+                    jugadoresEnemigos.add(logical.getPlayers().get(3));
+                    jugadoresEnemigos.add(logical.getPlayers().get(4));
+                    break;
+            }
+        } 
+    }
+ 
 }

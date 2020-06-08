@@ -72,7 +72,7 @@ public class ServidorHilo extends Thread {
         }
     }  
     
-    public void startGame(int cantidad) //Enviar condicion para comenzar partida y cambiar pantalla
+    public void startGame(int cantidad, int turno) //Enviar condicion para comenzar partida y cambiar pantalla
     {
         try
         {
@@ -86,6 +86,7 @@ public class ServidorHilo extends Thread {
             paquete.add(x);
             paquete.add(cantidad);
             paquete.add(usersname);
+            paquete.add(turno);
             oos.writeObject(paquete);
         } catch (IOException ex) {
             Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,7 +104,7 @@ public class ServidorHilo extends Thread {
         }
     }
     
-    public void enviarJuego(LogicalGame logical) //Enviar el juego al cliente asociado para que este posea el juego actual
+    public void enviarJuego(LogicalGame logical) //Enviar el juego al cliente asociado para que este posea el juego actual desde Servidor
     {
         try 
         {
@@ -112,6 +113,19 @@ public class ServidorHilo extends Thread {
             oos.writeObject(paquete);
         } catch (IOException ex) {
             Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void actualizarJuegos(LogicalGame logical) //Actualiza el juego de los demas jugadores cuando el que esta en turno finaliza *Aun en implementacion*
+    {
+        ArrayList<Object> paquete = new ArrayList<>();
+        paquete.add(logical);
+        for(ServidorHilo shc : clients)
+        {
+            if(shc != this)
+            {
+                
+            }
         }
     }
 }

@@ -25,7 +25,7 @@ public final class LogicalGame implements Serializable{
     
     public ArrayList<Carta> mazo;
     public ArrayList<Jugador> players;
-    public ArrayList<ArrayList<Carta>> mazoJugadores;
+    public ArrayList<Carta> cartasDesechas;
     public int cantidadJugadores;
     public int turno = 1;
     
@@ -141,22 +141,41 @@ public final class LogicalGame implements Serializable{
     public void asignarCartas(int mesas)
     {
         players = new ArrayList<>();
-        mazoJugadores = new  ArrayList<>();
         for(int x = 1; x <= mesas; x++)
         {
             ArrayList<Carta> mano = new ArrayList<>();
-            for(int y = 0; y < 3; y++)
+            for(int y = 0; y < 1; y++)//Prueba-Arreglar Despues
             {
                 Carta carta = (Carta)mazo.get(0);
                 carta.jugador = x;
                 mano.add(carta);
                 mazo.remove(0);
             }
+            Carta carta = new Organo(1, "O1", 1);
+            carta.jugador = x;
+            mano.add(carta);
+            mazo.remove(0);
+            carta = new Organo(2, "O2", 1);
+            carta.jugador = x;
+            mano.add(carta);
+            mazo.remove(0);
             Jugador player = new Jugador(mano, x);
-            mazoJugadores.add(mano);
             players.add(player);
         }
     }
     
+    public void crearEspacioCartaJugada(int mesas)
+    {
+        
+    }
+    
+    public void actualizarLogical()
+    {
+        
+    }
+
+    public ArrayList<Jugador> getPlayers() {
+        return players;
+    }
 }
 

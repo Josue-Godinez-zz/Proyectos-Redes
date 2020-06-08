@@ -146,7 +146,7 @@ public class Servidor {
     {
         for(int x = 0; x < clients.size(); x++)
         {
-            clients.get(x).startGame(clients.size());
+            clients.get(x).startGame(clients.size(), x+1);
         }
     }
     

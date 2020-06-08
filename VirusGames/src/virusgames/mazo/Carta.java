@@ -20,6 +20,7 @@ public abstract class Carta implements Serializable{
     public int jugador;
     static public int turno = 1;
     static Carta carta = null;
+    public boolean isPlayed = false;
     
     Carta(int numCarta){
 //        addEventFilter(MouseEvent.MOUSE_CLICKED, e->{

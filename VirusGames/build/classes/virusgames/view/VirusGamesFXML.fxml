@@ -34,7 +34,7 @@
                      <children>
                         <Button fx:id="btnJoin" layoutX="246.0" layoutY="183.0" mnemonicParsing="false" onAction="#OnActionbtnCliente" prefHeight="36.0" prefWidth="80.0" text="Unirse" />
                         <Text layoutX="256.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IP del Host" wrappingWidth="60.13671875" />
-                        <TextField fx:id="tbIPHost" alignment="CENTER" layoutX="211.0" layoutY="62.0" promptText="IP Host" text="192.168.1.5" />
+                        <TextField fx:id="tbIPHost" alignment="CENTER" layoutX="211.0" layoutY="62.0" promptText="IP Host" text="25.102.38.188" />
                         <Text fx:id="txtError" fill="RED" layoutX="243.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" />
                         <Button fx:id="btnLogOut" layoutX="245.0" layoutY="235.0" mnemonicParsing="false" onAction="#desconectar" text="Desconectar" />
                         <Text layoutX="231.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre De Jugador" />

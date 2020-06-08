@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="VirusGames.jnlp">
+  <information>
+    <title>VirusGames</title>
+    <vendor>josue</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="VirusGames.jar" size="5693143" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="800" height="600" main-class="virusgames.VirusGames"  name="VirusGames" />
+  <update check="always"/>
+</jnlp>
