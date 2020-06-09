@@ -34,6 +34,7 @@ public final class LogicalGame implements Serializable{
         this.cantidadJugadores = cantidadJugadores;
         generarMazo();
         asignarCartas(cantidadJugadores);
+        cartasDesechas = new ArrayList<>();
     }
     
     public void generarMazo()
@@ -162,16 +163,6 @@ public final class LogicalGame implements Serializable{
             Jugador player = new Jugador(mano, x);
             players.add(player);
         }
-    }
-    
-    public void crearEspacioCartaJugada(int mesas)
-    {
-        
-    }
-    
-    public void actualizarLogical()
-    {
-        
     }
 
     public ArrayList<Jugador> getPlayers() {

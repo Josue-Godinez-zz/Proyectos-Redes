@@ -81,13 +81,14 @@ public class GameFXMLController extends Controller implements Initializable {
     public LogicalGame logical;
     public Map<String, String> diccionario;
     public SimpleIntegerProperty turnoActual = new SimpleIntegerProperty(0);
-    public int jugadorTurno = 1;
+    public int jugadorTurno = 0;
     
     /*Variables Relacionada Con La Jugabilidad*/
-    public int cantidadCartas = 0;
+    public SimpleIntegerProperty cantidadCartas = new SimpleIntegerProperty(0);
     public Carta cartaSeleccionada = null;
     public ImageView cartaSeleccionadaIV = null;
     public ArrayList<Carta> cartasSelecionada = new ArrayList<>();
+    public ArrayList<ImageView> cartasSelecionadaIV = new ArrayList<>();
     public HBox mesaPropia;
     public HBox cartasPropias;
     public ArrayList<HBox> mesaEnemigas;
@@ -102,16 +103,11 @@ public class GameFXMLController extends Controller implements Initializable {
         servidor = (Servidor)AppContext.getInstance().get("servidor");
         cliente = (Cliente)AppContext.getInstance().get("cliente");
         turnoActual.set(1);
-        
-        turnoActual.addListener(t->{
-            /* Refrescar/Actualizar la vista*/
 
-        });
-        
+        jugadorTurno = cliente.getTurno();
         tableroDinamico(cliente.getCantidadJugadores());
         asignacionMesasInterfaz(cliente.getCantidadJugadores());
         generarDiccionario();
-        jugadorTurno = cliente.getTurno();
         if(cliente.isHost)
         {
             generarJuego();
@@ -126,30 +122,60 @@ public class GameFXMLController extends Controller implements Initializable {
             }
             cargarJuego();
             cargarLogical();
-            
         }
         
         asignacionMesasCodigo(cliente.getCantidadJugadores());
+        
         ivMazo.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
-            cantidadCartas++;
-            if(cantidadCartas == 1)
+            cantidadCartas.set(cantidadCartas.getValue()+1);
+            if(cantidadCartas.getValue() == 1)
             {
+                if(cartaSeleccionada != null)
+                {
+                    cartaSeleccionada = null;
+                    cartaSeleccionadaIV.setOpacity(1);
+                    cartaSeleccionadaIV = null;
+                }
                 btnDrawCard.setDisable(false);
-                btnDrawCard.setText("DRAW <"+cantidadCartas+">");
+                btnDrawCard.setText("DRAW <"+cantidadCartas.getValue()+">");
             }
-            if(cantidadCartas == 2)
+            if(cantidadCartas.getValue() == 2)
             {
-                btnDrawCard.setText("DRAW <"+cantidadCartas+">");
+                btnDrawCard.setText("DRAW <"+cantidadCartas.getValue()+">");
             }
-            if(cantidadCartas == 3)
+            if(cantidadCartas.getValue() == 3)
             {
-                btnDrawCard.setText("DRAW <"+cantidadCartas+">");
+                btnDrawCard.setText("DRAW <"+cantidadCartas.getValue()+">");
             }
-            if(cantidadCartas == 4)
+            if(cantidadCartas.getValue() == 4)
             {
                 btnDrawCard.setDisable(true);
                 btnDrawCard.setText("DRAW");
-                cantidadCartas = 0;
+                for(ImageView iv : cartasSelecionadaIV)
+                {
+                    iv.setOpacity(1);
+                    cartasSelecionadaIV.remove(iv);
+                }
+                for(Carta carta : cartasSelecionada)
+                {
+                    cartasSelecionada.remove(carta);
+                }
+                cantidadCartas.setValue(0);
+            }
+        });
+        
+        turnoActual.addListener(t->{
+            /* Refrescar/Actualizar la vista*/
+            System.out.println("1");
+            if(!jugadorPropio.isWinner)
+            {
+                System.out.println("2.1");
+                borrarInterfaz(logical.cantidadJugadores);
+                cargarLogical();
+            }
+            else
+            {
+                System.out.println("2.2");
             }
         });
     }    
@@ -162,6 +188,32 @@ public class GameFXMLController extends Controller implements Initializable {
     @FXML
     private void changeCard(ActionEvent event) {
         System.out.println("Quiere Cambiar " +cantidadCartas+ " cartas");
+        if(cartasSelecionada.size() == cantidadCartas.getValue())
+        {
+            for(int x = 0; x<cartasSelecionada.size() ;x++)
+            {
+                logical.cartasDesechas.add(cartasSelecionada.get(x));
+                jugadorPropio.getMano().remove(cartasSelecionada.get(x));
+                cartasPropias.getChildren().remove(cartasSelecionadaIV.get(x));
+//                ImageView iv = new ImageView();
+//                Carta carta;
+//                carta = logical.mazo.get(0);
+//                jugadorPropio.getMano().add(carta);
+//                iv.setImage(new Image(diccionario.get(carta.imgCarta)));
+//                iv.setFitHeight(85);
+//                iv.setFitWidth(62);
+//                iv.setSmooth(true);
+//                iv.setPreserveRatio(true);
+//                definirMovimientos(iv, carta);
+//                cartasPropias.getChildren().add(iv);
+            }
+            tomarCarta(cartasSelecionada.size());
+            cartasSelecionada.clear();
+            cartasSelecionadaIV.clear();
+            cantidadCartas.set(0);
+            btnDrawCard.setText("DRAW");
+            btnDrawCard.setDisable(true);
+        }
     }
     
     public void tableroDinamico(int cantidad)
@@ -199,7 +251,7 @@ public class GameFXMLController extends Controller implements Initializable {
         if(cantidad == 4)
         {
             mesasDisponibles.add(vbMesa3);
-            txtPlayer4.setText(cliente.getUsersName().get(0));
+            txtPlayer3.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa5);
             txtPlayer5.setText(cliente.getUsersName().get(1));
             mesasDisponibles.add(vbMesa4);
@@ -207,7 +259,9 @@ public class GameFXMLController extends Controller implements Initializable {
             mesasDisponibles.add(vbMesa6);
             txtPlayer6.setText(cliente.getUsersName().get(3));
             vbMesa2.setVisible(false);
+            txtPlayer2.setVisible(false);
             vbMesa1.setVisible(false);
+            txtPlayer1.setVisible(false);
         }
         if(cantidad == 5)
         {
@@ -222,6 +276,7 @@ public class GameFXMLController extends Controller implements Initializable {
             mesasDisponibles.add(vbMesa6);
             txtPlayer6.setText(cliente.getUsersName().get(4));
             vbMesa1.setVisible(false);
+            txtPlayer1.setVisible(false);
         }
         if(cantidad == 6) 
         {
@@ -251,7 +306,7 @@ public class GameFXMLController extends Controller implements Initializable {
         logical = cliente.getJuego();
     }
     
-    public void cargarLogical()
+    public void cargarLogical() //Carga la partida, situa las carta en el campo correspondiente
     {
         if(logical != null)
         {
@@ -263,59 +318,110 @@ public class GameFXMLController extends Controller implements Initializable {
                 {
                     String img = (String) manoJugador.get(y).imgCarta;
                     ImageView carta = new ImageView(new Image(diccionario.get(img)));
-                    carta.setFitHeight(85);
+                    carta.setFitHeight(85); 
                     carta.setFitWidth(62);
                     carta.setPreserveRatio(true);
                     carta.setSmooth(true);
-                    if(turnoActual.getValue() ==  jugadorTurno)
-                    {
-                        definirMovimientos(carta, manoJugador.get(y));
-                    }
+                    definirMovimientos(carta, manoJugador.get(y));
                     aux.getChildren().add(carta);
+                }
+                HBox aux2 = (HBox)mesasDisponibles.get(x).getChildren().get(0);
+                Jugador jugador = logical.players.get(x);
+                for(int y = 1; y <= 4; y++)
+                {
+                    ArrayList pilaColor = jugador.getJuegoPropio().get(y);
+                    if(!pilaColor.isEmpty())
+                    {
+                        PersonalStackPane sp = new PersonalStackPane(y);
+                        for(int z = 0; z<pilaColor.size(); z++)
+                        {
+                            ImageView img = new ImageView();
+                            img.setFitHeight(85);
+                            img.setFitWidth(62);
+                            img.setPreserveRatio(true);
+                            img.setSmooth(true);
+                            Carta carta = (Carta) pilaColor.get(z);
+                            if(z == 0)
+                            {
+                                img.setImage(new Image(diccionario.get(carta.imgCarta)));
+                            }
+                            else
+                            {
+                                img.setImage(new Image(diccionario.get(carta.imgCarta)));
+                                img.setRotate(13);
+                            }
+                            sp.getChildren().add(img);
+                        }
+                        aux2.getChildren().add(sp);
+                    }
                 }
             }
         }
     }
     
-    public void definirMovimientos(ImageView carta, Carta card)
+    public void definirMovimientos(ImageView carta, Carta card)//Le asigna movilidad de acuerdo al tipo de carta
     {
        carta.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
-           if(cantidadCartas != 0)
-           {
-                System.out.println("saco carta");
-           }
-           else
-           {
-               if(card.jugador == turnoActual.getValue())
-               {
-                   if(cartaSeleccionada == null)
-                   {
-                        cartaSeleccionada = card;
-                        cartaSeleccionadaIV = carta;
-                        cartaSeleccionadaIV.setOpacity(0.5);
-                        eleccionTipoCarta();
-                   }
-                   else
-                   {
-                       if(cartaSeleccionada == card)
-                       {
-                           cartaSeleccionadaIV.setOpacity(1);
-                           cartaSeleccionadaIV = null;
-                           cartaSeleccionada = null;
-                       }
-                       else
-                       {
-                           cartaSeleccionadaIV.setOpacity(1);
-                           cartaSeleccionadaIV = carta;
-                           cartaSeleccionadaIV.setOpacity(0.5);
-                           cartaSeleccionada = card;
-                           eleccionTipoCarta();
-                       }
-                   }  
-               }
-           }
-           
-           
+//           cantidadCartas.addListener(l->{
+//           });
+                if(cantidadCartas.getValue() != 0)
+                {
+                    if(turnoActual.getValue() == card.jugador)
+                    {
+                        if(cartasSelecionada.isEmpty())
+                        {
+                            cartasSelecionada.add(card);
+                            carta.setOpacity(0.5);
+                            cartasSelecionadaIV.add(carta);
+                        }
+                        else
+                        {
+                            if(cartasSelecionada.contains(card))
+                            {
+                                cartasSelecionada.remove(card);
+                                carta.setOpacity(1);
+                                cartasSelecionadaIV.remove(carta);
+                            }
+                            else
+                            {
+                                if(cartasSelecionada.size() != cantidadCartas.getValue())
+                                {
+                                    cartasSelecionada.add(card);
+                                    carta.setOpacity(0.5);
+                                    cartasSelecionadaIV.add(carta);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if(jugadorTurno == turnoActual.getValue() )
+                    {
+                        if (turnoActual.getValue() == card.jugador) 
+                        {
+                            if (cartaSeleccionada == null) {
+                                cartaSeleccionada = card;
+                                cartaSeleccionadaIV = carta;
+                                cartaSeleccionadaIV.setOpacity(0.5);
+                                eleccionTipoCarta();
+                            } else {
+                                if (cartaSeleccionada == card) {
+                                    cartaSeleccionadaIV.setOpacity(1);
+                                    cartaSeleccionadaIV = null;
+                                    cartaSeleccionada = null;
+                                } else {
+                                    cartaSeleccionadaIV.setOpacity(1);
+                                    cartaSeleccionadaIV = carta;
+                                    cartaSeleccionadaIV.setOpacity(0.5);
+                                    cartaSeleccionada = card;
+                                    eleccionTipoCarta();
+                                }
+                            }
+                        }
+
+                    }
+                }
        });
     }
 
@@ -389,49 +495,94 @@ public class GameFXMLController extends Controller implements Initializable {
     }
     public void moverOrgano()
     {
-        System.out.println("ORGANO PARTE 1");
         EventHandler event = e->
         {
-            if(!cartaSeleccionada.isPlayed) {
-                System.out.println("ORGANO PARTE 2.1");
-                int color = cartaSeleccionada.colorCarta;
-                ArrayList<Carta> pilaColor = jugadorPropio.getJuegoPropio().get(color);
-                if (pilaColor.isEmpty()) {
-                    PersonalStackPane sp = new PersonalStackPane(color);
-                    cartaSeleccionada.isPlayed = true;
-                    pilaColor.add(cartaSeleccionada);
-                    logical.players.get(jugadorTurno - 1).getMano().remove(cartaSeleccionada);
+            if (turnoActual.getValue() == jugadorTurno) {
+                if (!cartaSeleccionada.isPlayed) {
+                    System.out.println("ORGANO PARTE 2.1");
+                    int color = cartaSeleccionada.colorCarta;
+                    ArrayList<Carta> pilaColor = jugadorPropio.getJuegoPropio().get(color);
+                    if (pilaColor.isEmpty()) {
+                        PersonalStackPane sp = new PersonalStackPane(color);
+                        cartaSeleccionada.isPlayed = true;
+                        pilaColor.add(cartaSeleccionada);
+                        logical.players.get(jugadorTurno - 1).getMano().remove(cartaSeleccionada);
+                        cartaSeleccionadaIV.setOpacity(1);
+                        HBox aux = (HBox) cartaSeleccionadaIV.getParent();
+                        aux.getChildren().remove(cartaSeleccionadaIV);
+                        sp.getChildren().add(cartaSeleccionadaIV);
+                        mesaPropia.getChildren().add(sp);
+                        mesaPropia.setOnMouseClicked(null);
+                        tomarCarta(1);
+                        turnoActual.set(2);
+                    } else {
+                        System.out.println("ORGANO PARTE 2.2");
+                        System.out.println("Contiene un organo de este mismo color");
+                    }
+                } else {
+                    System.out.println("ORGANO PARTE 3");
+                    cartaSeleccionada = null;
                     cartaSeleccionadaIV.setOpacity(1);
-                    HBox aux = (HBox) cartaSeleccionadaIV.getParent();
-                    aux.getChildren().remove(cartaSeleccionadaIV);
-                    sp.getChildren().add(cartaSeleccionadaIV);
-                    mesaPropia.getChildren().add(sp);
                     mesaPropia.setOnMouseClicked(null);
-                    tomarCarta(1);
                 }
-                else
-                {
-                    System.out.println("ORGANO PARTE 2.2");
-                    System.out.println("Contiene un organo de este mismo color");
-                }
-            }
-            else
-            {
-                System.out.println("ORGANO PARTE 3");
-                cartaSeleccionada = null;
-                cartaSeleccionadaIV.setOpacity(1);
-                mesaPropia.setOnMouseClicked(null);
             }
         };
-        //mesaPropia.addEventFilter(MouseEvent.MOUSE_CLICKED, event);
         mesaPropia.setOnMouseClicked(event);
         
     }
     
     public void moverVirus()
     {
-        System.out.println("Virus");
+        EventHandler event = e->
+        {
+            if(jugadorTurno == turnoActual.getValue())
+            {
+                if(!cartaSeleccionada.isPlayed)
+                {
+                    int color = cartaSeleccionada.getColor();
+                    for(int x = 0; x < jugadoresEnemigos.size(); x++)
+                    {
+                        Boolean condColor = jugadoresEnemigos.get(x).condicionColor.get(color);
+                        if(!condColor)
+                        {
+                            ArrayList<Carta> pilaColor = jugadoresEnemigos.get(x).getJuegoPropio().get(color);
+                            if(!pilaColor.isEmpty())
+                            {                                
+                                if(pilaColor.size() == 1)
+                                {
+                                    pilaColor.add(cartaSeleccionada);
+                                    for(int  y = 0; y < mesaEnemigas.get(x).getChildren().size(); y++)
+                                    {
+                                        PersonalStackPane psp = (PersonalStackPane) mesaEnemigas.get(x).getChildren().get(y);
+                                        if(psp.colorCarta == color)
+                                        {
+                                            cartaSeleccionadaIV.setRotate(12);
+                                            cartaSeleccionadaIV.setOpacity(1);
+                                            psp.getChildren().add(cartaSeleccionadaIV);
+                                            jugadorPropio.getMano().remove(cartaSeleccionada);
+                                            mesaPropia.getChildren().remove(cartaSeleccionadaIV);
+                                            cartaSeleccionada.isPlayed = true;
+                                            tomarCarta(1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    cartaSeleccionada = null;
+                    cartaSeleccionadaIV.setOpacity(1);
+                    mesaPropia.setOnMouseClicked(null);
+                }
+            }
+        };
         
+        for(HBox me : mesaEnemigas)
+        {
+            me.setOnMouseClicked(event);
+        }
     }
 
     private void moverMedicina() 
@@ -644,7 +795,8 @@ public class GameFXMLController extends Controller implements Initializable {
                     ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
                     ivCarta.setFitHeight(85);
                     ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(null);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
                 }
             }
         }
@@ -809,4 +961,103 @@ public class GameFXMLController extends Controller implements Initializable {
         } 
     }
  
+    public void borrarInterfaz(int cantidadJugadores)
+    {
+        HBox hbAux;
+        if(cantidadJugadores == 2)
+        {
+            hbAux = (HBox) vbMesa1.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa1.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa2.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa2.getChildren().get(1);
+            hbAux.getChildren().clear();
+        }
+        else if(cantidadJugadores == 3)
+        {
+            hbAux = (HBox) vbMesa1.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa1.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa3.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa3.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa4.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa4.getChildren().get(1);
+            hbAux.getChildren().clear();
+        }
+        else if(cantidadJugadores == 4)
+        {
+            hbAux = (HBox) vbMesa5.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa5.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa3.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa3.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa4.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa4.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa6.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa6.getChildren().get(1);
+            hbAux.getChildren().clear();
+        }
+        else if(cantidadJugadores == 5)
+        {
+            hbAux = (HBox) vbMesa5.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa5.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa3.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa3.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa2.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa2.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa4.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa4.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa6.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa6.getChildren().get(1);
+            hbAux.getChildren().clear();
+        }
+        else if(cantidadJugadores == 6)
+        {
+            hbAux = (HBox) vbMesa1.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa1.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa2.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa2.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa3.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa3.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa4.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa4.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa5.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa5.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa6.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa6.getChildren().get(1);
+            hbAux.getChildren().clear();
+        }
+    }
 }

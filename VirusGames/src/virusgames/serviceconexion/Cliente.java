@@ -71,6 +71,7 @@ class User extends Thread {
                             cantidadJugadores = (int) paquete.get(1);
                             usersName = (ArrayList<String>) paquete.get(2);
                             turno = (int) paquete.get(3);
+                            System.out.println(turno);
                         }
                         paquete = null;
                         paquete = (ArrayList<Object>) ois.readObject();
@@ -153,6 +154,7 @@ public class Cliente {
     
     public int getTurno()
     {
+        System.out.println(user.turno);
         return user.turno;
     }    
 } 

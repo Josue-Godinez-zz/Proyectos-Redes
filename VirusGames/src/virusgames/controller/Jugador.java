@@ -25,7 +25,12 @@ public class Jugador implements Serializable{
     private ArrayList<Carta> cartaVerde;
     private ArrayList<Carta> cartaRoja;
     public Map<Integer, ArrayList<Carta>> juegoPropio;
-    
+    public Map<Integer, Boolean> condicionColor;
+    private boolean isYellowComplete = false;
+    private boolean isBlueComplete = false;
+    private boolean isGreenComplete = false;
+    private boolean isRedComplete = false;
+    public boolean isWinner = false;
     public int mesa = 0;
     
     public Jugador(ArrayList<Carta> mano, int mesa) 
@@ -37,6 +42,8 @@ public class Jugador implements Serializable{
         cartaVerde = new ArrayList<>();
         cartaRoja = new ArrayList<>();
         preparaDiccionarioJP();
+        prepararDiccionarioCC();
+        
     }
 
     public Map<Integer, ArrayList<Carta>> getJuegoPropio() {
@@ -91,4 +98,45 @@ public class Jugador implements Serializable{
         juegoPropio.put(3, cartaRoja);
         juegoPropio.put(4, cartaVerde);
     }
+
+    public boolean isIsYellowComplete() {
+        return isYellowComplete;
+    }
+
+    public void setIsYellowComplete(boolean isYellowComplete) {
+        this.isYellowComplete = isYellowComplete;
+    }
+
+    public boolean isIsBlueComplete() {
+        return isBlueComplete;
+    }
+
+    public void setIsBlueComplete(boolean isBlueComplete) {
+        this.isBlueComplete = isBlueComplete;
+    }
+
+    public boolean isIsGreenComplete() {
+        return isGreenComplete;
+    }
+
+    public void setIsGreenComplete(boolean isGreenComplete) {
+        this.isGreenComplete = isGreenComplete;
+    }
+
+    public boolean isIsRedComplete() {
+        return isRedComplete;
+    }
+
+    public void setIsRedComplete(boolean isRedComplete) {
+        this.isRedComplete = isRedComplete;
+    }
+
+    private void prepararDiccionarioCC() {
+        condicionColor = new HashMap<>();
+        condicionColor.put(1, isYellowComplete);
+        condicionColor.put(2, isBlueComplete);
+        condicionColor.put(3, isRedComplete);
+        condicionColor.put(4, isGreenComplete);
+    }
+    
 }
