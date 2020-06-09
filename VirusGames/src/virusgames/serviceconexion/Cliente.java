@@ -76,7 +76,6 @@ class User extends Thread {
                         paquete = null;
                         paquete = (ArrayList<Object>) ois.readObject();
                         juego = (LogicalGame)paquete.get(0);
-                        
                     } catch (IOException | ClassNotFoundException ex) {
                         Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
                     }

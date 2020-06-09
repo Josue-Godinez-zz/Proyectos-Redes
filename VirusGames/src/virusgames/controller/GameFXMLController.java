@@ -100,6 +100,7 @@ public class GameFXMLController extends Controller implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         servidor = (Servidor)AppContext.getInstance().get("servidor");
         cliente = (Cliente)AppContext.getInstance().get("cliente");
         turnoActual.set(1);
