@@ -11,6 +11,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import virusgames.controller.LogicalGame;
 
@@ -24,7 +25,7 @@ public class ServidorHilo extends Thread {
     public ObjectOutputStream oos;
     public ObjectInputStream ois;
     
-    public String userName;
+    public SimpleStringProperty userName = new SimpleStringProperty();
     private int idSession;
     public Object accion;
     public Boolean clienteAvailable = true;
@@ -61,7 +62,7 @@ public class ServidorHilo extends Thread {
                     {
                         case "closeClient": cerrarServidorHilo();
                         break;
-                        default: userName = cmd;
+                        default: userName.set(cmd);
                     }
                 }
                 
@@ -80,7 +81,7 @@ public class ServidorHilo extends Thread {
             ArrayList<String> usersname = new ArrayList<>();
             for(ServidorHilo sh : clients)
             {
-                usersname.add(sh.userName);
+                usersname.add(sh.userName.getValue());
             }
             boolean x = true;
             paquete.add(x);

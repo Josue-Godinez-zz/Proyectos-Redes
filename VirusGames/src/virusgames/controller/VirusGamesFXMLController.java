@@ -15,17 +15,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import virusgames.serviceconexion.Cliente;
 import virusgames.serviceconexion.Servidor;
+import virusgames.serviceconexion.ServidorHilo;
 import virusgames.util.AppContext;
 import virusgames.util.FlowController;
 import virusgames.util.Formato;
@@ -63,6 +67,10 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     private TextField tbUserName;
     @FXML
     private TextField tbUserHostName;
+    @FXML
+    private TableView<ServidorHilo> tableViewJugador;
+    @FXML
+    private TableColumn<ServidorHilo, String> columJugador;
     
     Map<String, String> diccionario = new HashMap<>();
     
@@ -92,6 +100,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     }
      @Override
     public void initialize() {
+        
         stage = (Stage)root.getScene().getWindow();
         stage.setOnCloseRequest(e->{
             if(servidor != null)
@@ -107,15 +116,22 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
 
     @FXML
     private void OnActionbtnHost(ActionEvent event) {
+        
         if (tbUserHostName.getText().length() != 0) {
             tbUserHostName.setStyle("");
             servidor = new Servidor(cantidadJugador);
             servidor.iniciarProceso();
             
-            cliente = new Cliente("25.102.38.188");
+            cliente = new Cliente("25.129.167.214");
             cliente.nuevoClient(0, tbUserHostName.getText(), 0);
             cliente.isHost = true;
             
+            /*Setea la lista de jugadores*/
+            tableViewJugador.setItems(servidor.clients);
+            columJugador.setCellValueFactory(ed -> ed.getValue().userName);
+            Servidor.clients.addListener((ListChangeListener<ServidorHilo>) s -> {
+                tableViewJugador.refresh();
+            });
             Thread changeView = new Thread(new Runnable() {
                 @Override
                 public void run() {

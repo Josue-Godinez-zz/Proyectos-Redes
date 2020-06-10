@@ -2,10 +2,35 @@
  * Empty Stylesheet file.
  */
 
-.mainFxmlClass {
-     
+@font-face {
+    
 }
 
+*{
+    
+}
+
+.label {
+    /*-fx-font-family: "Khmer UI";*/
+}
+.button {
+    -fx-font-family: "Khmer UI";
+    -fx-font-size: 22px;
+    -fx-pref-width: 160px;
+    -fx-pref-height: 45px;
+    -fx-shape: "M 100 300 A 50 50 0 1 1 100 200 L 350 200 A 50 50 0 1 1 350 300 L 100 300";
+    -fx-background-color: whitesmoke;
+}
+.anchor-fondo , .tab-pane:top .tab-header-area{
+    -fx-background-color: #232231;
+}
+.tab-pane:top {
+    -fx-border-color: white;
+    -fx-border-style: solid;
+    -fx-border-width: 4;
+    -fx-background-color: #282835;
+    -fx-background-color: #282835;
+}
 #btnDraw
 {
     -fx-border-color: #999900;
