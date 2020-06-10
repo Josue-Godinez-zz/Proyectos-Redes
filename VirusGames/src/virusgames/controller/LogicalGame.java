@@ -28,6 +28,7 @@ public final class LogicalGame implements Serializable{
     public ArrayList<Carta> cartasDesechas;
     public int cantidadJugadores;
     public int turno = 1;
+    public boolean isGameFinished = false;
     
     public LogicalGame(int cantidadJugadores)
     {
@@ -167,6 +168,16 @@ public final class LogicalGame implements Serializable{
 
     public ArrayList<Jugador> getPlayers() {
         return players;
+    }
+    
+    public int nuevoTurno()
+    {
+        turno++;
+        if(turno > cantidadJugadores)
+        {
+            turno = 1;
+        }
+        return turno;
     }
 }
 

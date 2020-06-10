@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -82,6 +83,7 @@ public class GameFXMLController extends Controller implements Initializable {
     public Map<String, String> diccionario;
     public SimpleIntegerProperty turnoActual = new SimpleIntegerProperty(0);
     public int jugadorTurno = 0;
+    public Thread actualizarJuego;
     
     /*Variables Relacionada Con La Jugabilidad*/
     public SimpleIntegerProperty cantidadCartas = new SimpleIntegerProperty(0);
@@ -125,6 +127,7 @@ public class GameFXMLController extends Controller implements Initializable {
             cargarLogical();
         }
         
+        turnoActual.set(logical.turno);
         asignacionMesasCodigo(cliente.getCantidadJugadores());
         
         ivMazo.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
@@ -171,14 +174,34 @@ public class GameFXMLController extends Controller implements Initializable {
             if(!jugadorPropio.isWinner)
             {
                 System.out.println("2.1");
-                borrarInterfaz(logical.cantidadJugadores);
-                cargarLogical();
-            }
-            else
-            {
-                System.out.println("2.2");
+                Platform.runLater(()-> {
+                    borrarInterfaz(logical.cantidadJugadores);
+                    cargarLogical();
+                });
             }
         });
+        
+        actualizarJuego = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(!cliente.getJuego().isGameFinished)
+                {
+                    try {
+                        Thread.sleep(50);
+                        if(cliente.getCambioCartas())
+                        {
+                            logical = cliente.getJuego();
+                            cliente.setCambioCartas(false);
+                            int turno = logical.turno;
+                            turnoActual.setValue(turno);
+                        }
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(GameFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+        actualizarJuego.start();
     }    
 
     @Override
@@ -196,17 +219,6 @@ public class GameFXMLController extends Controller implements Initializable {
                 logical.cartasDesechas.add(cartasSelecionada.get(x));
                 jugadorPropio.getMano().remove(cartasSelecionada.get(x));
                 cartasPropias.getChildren().remove(cartasSelecionadaIV.get(x));
-//                ImageView iv = new ImageView();
-//                Carta carta;
-//                carta = logical.mazo.get(0);
-//                jugadorPropio.getMano().add(carta);
-//                iv.setImage(new Image(diccionario.get(carta.imgCarta)));
-//                iv.setFitHeight(85);
-//                iv.setFitWidth(62);
-//                iv.setSmooth(true);
-//                iv.setPreserveRatio(true);
-//                definirMovimientos(iv, carta);
-//                cartasPropias.getChildren().add(iv);
             }
             tomarCarta(cartasSelecionada.size());
             cartasSelecionada.clear();
@@ -214,6 +226,10 @@ public class GameFXMLController extends Controller implements Initializable {
             cantidadCartas.set(0);
             btnDrawCard.setText("DRAW");
             btnDrawCard.setDisable(true);
+        }
+        else if(cartasSelecionada.size() < cantidadCartas.getValue())
+        {
+            /*Mesaje*/
         }
     }
     
@@ -363,8 +379,6 @@ public class GameFXMLController extends Controller implements Initializable {
     public void definirMovimientos(ImageView carta, Carta card)//Le asigna movilidad de acuerdo al tipo de carta
     {
        carta.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
-//           cantidadCartas.addListener(l->{
-//           });
                 if(cantidadCartas.getValue() != 0)
                 {
                     if(turnoActual.getValue() == card.jugador)
@@ -488,9 +502,9 @@ public class GameFXMLController extends Controller implements Initializable {
                 break;
             case 3: moverMedicina();
                 break;
-            case 4:
+            case 4: ejecutarTratamiento();
                 break;
-            case 5:
+            case 5: moverComodin();
                 break;
         }
     }
@@ -515,7 +529,8 @@ public class GameFXMLController extends Controller implements Initializable {
                         mesaPropia.getChildren().add(sp);
                         mesaPropia.setOnMouseClicked(null);
                         tomarCarta(1);
-                        turnoActual.set(2);
+                        logical.nuevoTurno();
+                        cliente.actualizarJuego(logical);
                     } else {
                         System.out.println("ORGANO PARTE 2.2");
                         System.out.println("Contiene un organo de este mismo color");
@@ -586,7 +601,7 @@ public class GameFXMLController extends Controller implements Initializable {
         }
     }
 
-    private void moverMedicina() 
+    public void moverMedicina() 
     {
         System.out.println("Medicina");
     }
@@ -792,6 +807,288 @@ public class GameFXMLController extends Controller implements Initializable {
                     carta = logical.mazo.get(0);
                     carta.jugador = 2;
                     logical.players.get(1).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+        }
+        else if(logical.cantidadJugadores == 3)
+        {
+            if(jugadorTurno == 1)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 1;
+                    logical.players.get(0).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 2)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 2;
+                    logical.players.get(1).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 3)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 3;
+                    logical.players.get(2).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+        }
+        else if(logical.cantidadJugadores == 4)
+        {
+            if(jugadorTurno == 1)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 1;
+                    logical.players.get(0).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 2)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 2;
+                    logical.players.get(1).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 3)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 3;
+                    logical.players.get(2).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 4)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 4;
+                    logical.players.get(3).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+        }
+        else if(logical.cantidadJugadores == 5)
+        {
+            if(jugadorTurno == 1)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 1;
+                    logical.players.get(0).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 2)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 2;
+                    logical.players.get(1).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 3)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 3;
+                    logical.players.get(2).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 4)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 4;
+                    logical.players.get(3).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 5)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 5;
+                    logical.players.get(4).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+        }
+        else if(logical.cantidadJugadores == 6)
+        {
+            if(jugadorTurno == 1)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 1;
+                    logical.players.get(0).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 2)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 2;
+                    logical.players.get(1).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 3)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 3;
+                    logical.players.get(2).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 4)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 4;
+                    logical.players.get(3).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 5)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 5;
+                    logical.players.get(4).getMano().add(carta);
+                    logical.mazo.remove(0);
+                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
+                    ivCarta.setFitHeight(85);
+                    ivCarta.setFitWidth(62);
+                    cartasPropias.getChildren().add(ivCarta);
+                    definirMovimientos(ivCarta, carta);
+                }
+            }
+            else if(jugadorTurno == 6)
+            {
+                for(int c = 0; c < cantidad; c++)
+                {
+                    carta = logical.mazo.get(0);
+                    carta.jugador = 6;
+                    logical.players.get(5).getMano().add(carta);
                     logical.mazo.remove(0);
                     ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
                     ivCarta.setFitHeight(85);
@@ -1060,5 +1357,15 @@ public class GameFXMLController extends Controller implements Initializable {
             hbAux = (HBox) vbMesa6.getChildren().get(1);
             hbAux.getChildren().clear();
         }
+    }
+
+    public void ejecutarTratamiento() {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Tratamiento");
+    }
+
+    public void moverComodin() {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Comodin");
     }
 }

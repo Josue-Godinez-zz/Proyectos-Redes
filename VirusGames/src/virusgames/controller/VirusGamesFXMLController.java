@@ -81,7 +81,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     public Servidor servidor;
     public Cliente cliente;
     public Boolean isHost;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cantidadJugador.addListener(t->{
@@ -122,7 +122,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
             servidor = new Servidor(cantidadJugador);
             servidor.iniciarProceso();
             
-            cliente = new Cliente("25.129.167.214");
+            cliente = new Cliente("25.102.38.188");
             cliente.nuevoClient(0, tbUserHostName.getText(), 0);
             cliente.isHost = true;
             
@@ -132,6 +132,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
             Servidor.clients.addListener((ListChangeListener<ServidorHilo>) s -> {
                 tableViewJugador.refresh();
             });
+            
             Thread changeView = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -228,6 +229,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     @FXML
     private void desconectar(ActionEvent event) {
         cliente.desconectarCliente();
+        cliente = null;
         btnJoin.setVisible(true);
         btnLogOut.setVisible(false);
         tbIPHost.setDisable(false);

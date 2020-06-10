@@ -31,12 +31,14 @@ public class ServidorHilo extends Thread {
     public Boolean clienteAvailable = true;
     public ObservableList<ServidorHilo> clients;
     int idEnable = 0;
+    Servidor servidor;
     
-    public ServidorHilo(Socket socket, int id, int isEnable, ObservableList<ServidorHilo> clients) {
+    public ServidorHilo(Socket socket, int id, int isEnable, ObservableList<ServidorHilo> clients, Servidor servidor) {
         this.clients = clients;
         this.socket = socket;
         this.idSession = id;
         this.idEnable = isEnable;
+        this.servidor = servidor;
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
             ois = new ObjectInputStream(socket.getInputStream());
@@ -61,6 +63,8 @@ public class ServidorHilo extends Thread {
                     switch(cmd)
                     {
                         case "closeClient": cerrarServidorHilo();
+                        break;
+                        case "nextPlayer": enviarJuegoServidor();
                         break;
                         default: userName.set(cmd);
                     }
@@ -117,16 +121,41 @@ public class ServidorHilo extends Thread {
         }
     }
     
-    public void actualizarJuegos(LogicalGame logical) //Actualiza el juego de los demas jugadores cuando el que esta en turno finaliza *Aun en implementacion*
+    public void enviarJuego(ArrayList<Object> paquete)
     {
-        ArrayList<Object> paquete = new ArrayList<>();
-        paquete.add(logical);
-        for(ServidorHilo shc : clients)
+       try 
         {
-            if(shc != this)
-            {
-                
-            }
+            oos.writeObject(paquete);
+        } catch (IOException ex) {
+            Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
+    public void enviarJuegoServidor() //Actualiza el juego de los demas jugadores cuando el que esta en turno finaliza *Aun en implementacion*
+    {
+        try //Actualiza el juego de los demas jugadores cuando el que esta en turno finaliza *Aun en implementacion*
+        {
+            //        try //Actualiza el juego de los demas jugadores cuando el que esta en turno finaliza *Aun en implementacion*
+//        {
+//            ArrayList<Object> paquete = (ArrayList<Object>) ois.readObject();
+//            System.out.println("PAQUETE A ENVIAR: " + paquete);
+//            for(ServidorHilo shc : clients)
+//            {
+//                oos.writeObject(paquete);
+//            }
+//            
+//        } catch (IOException ex) {
+//            Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        ArrayList<Object> paquete = (ArrayList<Object>) ois.readObject();
+        servidor.paquete = paquete;
+        servidor.actualizarJuego();
+        } catch (IOException ex) {
+            Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

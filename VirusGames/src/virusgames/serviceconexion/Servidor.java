@@ -8,6 +8,7 @@ package virusgames.serviceconexion;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.InvalidationListener;
@@ -32,6 +33,8 @@ public class Servidor {
     public boolean gameStart = false;
     Thread procesoSecundario;
     public SimpleIntegerProperty cantPlayer = new SimpleIntegerProperty(0);
+    ArrayList<Object> paquete;
+    
     
     public Servidor(SimpleIntegerProperty cantPlayer)
     {
@@ -68,7 +71,7 @@ public class Servidor {
                     Socket socket;
                     socket = serversocket.accept();
                     System.out.println("Nueva conexión entrante: " + socket);
-                    ServidorHilo sh = new ServidorHilo(socket, idSession, idEnable, clients);
+                    ServidorHilo sh = new ServidorHilo(socket, idSession, idEnable, clients, Servidor.this);
                     sh.start();
                     clients.add(sh);
                     idSession++;
@@ -155,6 +158,14 @@ public class Servidor {
         for(int x = 0; x < clients.size(); x++)
         {
             clients.get(x).enviarJuego(logical);
+        }
+    }
+    
+    public void actualizarJuego()
+    {
+        for(int x = 0; x < clients.size(); x++)
+        {
+            clients.get(x).enviarJuego(paquete);
         }
     }
 }

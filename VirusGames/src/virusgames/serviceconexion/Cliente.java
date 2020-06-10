@@ -33,11 +33,13 @@ class User extends Thread {
     public String hostID;
     public Boolean isClientAvaible = true;
     public static int cantidadJugadores = 0;
-    Thread procesoCliente;
+    public Thread procesoCliente;
+    public Thread procesoJuego;
     public ArrayList<Object> paquete = new ArrayList<>();
     public LogicalGame juego = null;
     public ArrayList<String> usersName;
     public int turno;
+    public boolean changeCards = false;
     
     public User(int id)
     {
@@ -71,11 +73,12 @@ class User extends Thread {
                             cantidadJugadores = (int) paquete.get(1);
                             usersName = (ArrayList<String>) paquete.get(2);
                             turno = (int) paquete.get(3);
-                            System.out.println(turno);
                         }
                         paquete = null;
                         paquete = (ArrayList<Object>) ois.readObject();
                         juego = (LogicalGame)paquete.get(0);
+                        procesoCliente = null;
+                        procesoJuego.start();
                     } catch (IOException | ClassNotFoundException ex) {
                         Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -83,6 +86,28 @@ class User extends Thread {
             });
             procesoCliente.start();
             
+            procesoJuego = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    do
+                    {
+                        if(!juego.isGameFinished)
+                        {
+                            try {
+                                ArrayList<Object> paquete = (ArrayList<Object>) ois.readObject();
+                                changeCards = (boolean) paquete.get(0);
+                                juego = (LogicalGame) paquete.get(1);
+                                System.out.println("PAQUETE A RECIBIR: "+ paquete);
+                            } catch (IOException ex) {
+                                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (ClassNotFoundException ex) {
+                                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                    while(!juego.isGameFinished);
+                }
+            });
                     
         } catch (IOException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -102,7 +127,22 @@ class User extends Thread {
         }
     }
     
-    
+    public void turnoSiguienteJugador()
+    {
+        try
+        {
+            oos.writeObject("nextPlayer");
+            Boolean changeCards = true;
+            ArrayList<Object> paquete = new ArrayList<>();
+            paquete.add(changeCards);
+            paquete.add(juego);
+            oos.writeObject(paquete); 
+        }
+        catch(IOException ex)
+        {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
 
 public class Cliente {
@@ -140,6 +180,10 @@ public class Cliente {
         cantidadPlayer = user.cantidadJugadores;
         return cantidadPlayer;
     }
+    public void setJuego(LogicalGame logical)
+    {
+        user.juego = logical;
+    }
 
     public LogicalGame getJuego()
     {
@@ -155,6 +199,26 @@ public class Cliente {
     {
         System.out.println(user.turno);
         return user.turno;
-    }    
+    }
+    public void actualizarJuego(LogicalGame logical)
+    {
+        user.juego = logical;
+        user.turnoSiguienteJugador();
+    }
+
+    public void setCambioCartas(boolean cond)
+    {
+        user.changeCards = cond;
+    }
+    
+    public boolean getCambioCartas()
+    {
+        return user.changeCards;
+    }
+    
+    public void finTurno()
+    {
+        
+    }
 } 
     
