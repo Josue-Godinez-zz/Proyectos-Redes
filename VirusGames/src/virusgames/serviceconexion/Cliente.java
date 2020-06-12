@@ -113,10 +113,14 @@ class User extends Thread {
     public void desconectarCliente()
     {
         try {
-            isClientAvaible = false;
-            procesoCliente.stop();
-            oos.writeObject("closeClient");
+            ArrayList<Object> paquete = new ArrayList<>();
+            int cmd = 0;
+            paquete.add(cmd);
+            oos.writeObject(paquete);
+            ois.close();
+            oos.close();
             socket.close();
+            procesoCliente.stop();
         } catch (IOException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -125,10 +129,10 @@ class User extends Thread {
     public void pasarDeTurno(LogicalGame game)    
     {
         try {
-            oos.writeObject("pasarDeTurno");
-            System.out.println("Comando Enviado");
-            oos.writeObject(game);
-            System.out.println("Paquete Enviado");
+            ArrayList<Object> paquete = new ArrayList<>();
+            paquete.add(1);
+            paquete.add(game);
+            oos.writeObject(paquete);
         } catch (IOException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
