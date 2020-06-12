@@ -3,12 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/josue/Desktop/Proyecto%20Redes/VirusGames/src/virusgames/serviceconexion/Cliente.java</file>
-            <file>file:/C:/Users/josue/Desktop/Proyecto%20Redes/VirusGames/src/virusgames/util/FlowController.java</file>
-            <file>file:/C:/Users/josue/Desktop/Proyecto%20Redes/VirusGames/src/virusgames/controller/GameFXMLController.java</file>
-            <file>file:/C:/Users/josue/Desktop/Proyecto%20Redes/VirusGames/src/virusgames/controller/LogicalGame.java</file>
-            <file>file:/C:/Users/josue/Desktop/Proyecto%20Redes/VirusGames/src/virusgames/serviceconexion/Servidor.java</file>
-            <file>file:/C:/Users/josue/Desktop/Proyecto%20Redes/VirusGames/src/virusgames/serviceconexion/ServidorHilo.java</file>
+            <file>file:/C:/Users/jerso/Downloads/GitHub/Proyectos-Redes/VirusGames/src/virusgames/controller/VirusGamesFXMLController.java</file>
+            <file>file:/C:/Users/jerso/Downloads/GitHub/Proyectos-Redes/VirusGames/src/virusgames/serviceconexion/Cliente.java</file>
+            <file>file:/C:/Users/jerso/Downloads/GitHub/Proyectos-Redes/VirusGames/src/virusgames/controller/GameFXMLController.java</file>
         </group>
     </open-files>
 </project-private>

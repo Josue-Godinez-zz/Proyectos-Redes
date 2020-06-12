@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleBooleanProperty;
 import virusgames.controller.LogicalGame;
 
 /**
@@ -30,14 +31,17 @@ class User extends Thread {
     public String hostID;
     public Boolean isClientAvaible = true;
     public Thread procesoCliente;
+    public static SimpleBooleanProperty cambioVista = new SimpleBooleanProperty(false);
+    public int turno = 0;
     public ArrayList<Object> paquete = new ArrayList<>();
     public static LogicalGame juego = null;
     public ArrayList<String> usersName;
     
-    public User(String username,Cliente cliente, String hostID) {
+    public User(String username,Cliente cliente, String hostID,SimpleBooleanProperty bool ) {
         this.username = username;
         this.cliente = cliente;
         this.hostID = hostID;
+        this.cambioVista.bindBidirectional(bool);
     }
 
     @Override
@@ -51,9 +55,19 @@ class User extends Thread {
                 @Override
                 public void run() {
                     try {
+                        /*Registro inicial*/
                         oos.writeObject(username);
                         ArrayList<Object> paquete = (ArrayList<Object>)ois.readObject();
-                        /*Switch*/
+                        /*Recibe el juego inicial y lo ajusta al cliente*/
+                        turno = (int) paquete.get(0);
+                        juego = (LogicalGame) paquete.get(1);
+                        cambioVista.set((boolean) paquete.get(2));
+                         
+                         /*Juego*/
+//                         do {
+//                             
+//                         } while();
+                         /**/
                         } catch (IOException | ClassNotFoundException ex) {
                         Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -111,6 +125,7 @@ public class Cliente {
     User user;
     public boolean accionRealizada = false;
     public String hostIP;
+    public static SimpleBooleanProperty cambiarVista = new SimpleBooleanProperty(false);
 
     public Cliente(String hostIP)
     {
@@ -119,7 +134,7 @@ public class Cliente {
 
     public void nuevoClient(String username)
     {
-        user = new User(username, this, hostIP);
+        user = new User(username, this, hostIP, cambiarVista);
         user.start();
     }
     public void desconectarCliente() {

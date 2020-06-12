@@ -53,17 +53,12 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     /*Variable Propias*/
     Stage stage;
     public SimpleIntegerProperty cantidadJugador = new SimpleIntegerProperty(0);
-    public SimpleBooleanProperty isGameStart = new SimpleBooleanProperty(false);
     public Cliente cliente;
     public Boolean isHost;
     public boolean isReady = false;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        isGameStart.addListener(t->{
-            AppContext.getInstance().set("cliente", cliente);
-            FlowController.getInstance().goViewInStage("GameFXML", (Stage)root.getScene().getWindow(), true);
-        });
         
        tbUserName.setTextFormatter(Formato.getInstance().maxLengthFormat(7));
        tbIPHost.setTextFormatter(Formato.getInstance().ipFormat());
@@ -85,15 +80,19 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
             tbIPHost.setDisable(true);
             btnJoin.setVisible(false);
             btnLogOut.setVisible(true);
-            Thread changeView = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (cliente != null) {
-//                        isGameStart.setValue(cliente.getChangeView());
-                    }
-                }
+            Cliente.cambiarVista.addListener(t -> {
+            AppContext.getInstance().set("cliente", cliente);
+            FlowController.getInstance().goViewInStage("GameFXML", (Stage)root.getScene().getWindow(), true);
             });
-            changeView.start();
+//            Thread changeView = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    while (cliente != null) {
+//                        isGameStart.setValue(cliente.);
+//                    }
+//                }
+//            });
+//            changeView.start();
         } else {
             if(tbUserName.getText().length() == 0)
             {
