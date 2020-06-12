@@ -5,14 +5,10 @@
  */
 package virusgames.controller;
 
-import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ListChangeListener;
@@ -130,7 +126,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
             tableViewJugador.setItems(servidor.clients);
             columJugador.setCellValueFactory(ed -> ed.getValue().userName);
             Servidor.clients.addListener((ListChangeListener<ServidorHilo>) s -> {
-                tableViewJugador.refresh();
+            tableViewJugador.refresh();
             });
             
             Thread changeView = new Thread(new Runnable() {
@@ -234,7 +230,5 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
         btnLogOut.setVisible(false);
         tbIPHost.setDisable(false);
     }
-    
-    
-    
+
 }

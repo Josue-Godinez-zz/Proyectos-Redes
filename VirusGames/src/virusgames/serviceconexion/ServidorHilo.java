@@ -64,7 +64,7 @@ public class ServidorHilo extends Thread {
                     {
                         case "closeClient": cerrarServidorHilo();
                         break;
-                        case "nextPlayer": enviarJuegoServidor();
+                        case "pasarDeTurno": pasarDeTurno();
                         break;
                         default: userName.set(cmd);
                     }
@@ -121,37 +121,11 @@ public class ServidorHilo extends Thread {
         }
     }
     
-    public void enviarJuego(ArrayList<Object> paquete)
-    {
-       try 
-        {
-            oos.writeObject(paquete);
-        } catch (IOException ex) {
-            Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    public void enviarJuegoServidor() //Actualiza el juego de los demas jugadores cuando el que esta en turno finaliza *Aun en implementacion*
-    {
-        try //Actualiza el juego de los demas jugadores cuando el que esta en turno finaliza *Aun en implementacion*
-        {
-            //        try //Actualiza el juego de los demas jugadores cuando el que esta en turno finaliza *Aun en implementacion*
-//        {
-//            ArrayList<Object> paquete = (ArrayList<Object>) ois.readObject();
-//            System.out.println("PAQUETE A ENVIAR: " + paquete);
-//            for(ServidorHilo shc : clients)
-//            {
-//                oos.writeObject(paquete);
-//            }
-//            
-//        } catch (IOException ex) {
-//            Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        ArrayList<Object> paquete = (ArrayList<Object>) ois.readObject();
-        servidor.paquete = paquete;
-        servidor.actualizarJuego();
+    private void pasarDeTurno() {
+        try {
+            LogicalGame game = (LogicalGame) ois.readObject();
+//            System.out.println("PP= " + game.players);
+            servidor.enviarJuego(game);
         } catch (IOException ex) {
             Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

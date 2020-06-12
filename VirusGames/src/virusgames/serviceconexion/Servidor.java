@@ -158,14 +158,9 @@ public class Servidor {
         for(int x = 0; x < clients.size(); x++)
         {
             clients.get(x).enviarJuego(logical);
+            //System.out.println("SERVIDOR-TURNO: "+ logical.turno);
         }
     }
     
-    public void actualizarJuego()
-    {
-        for(int x = 0; x < clients.size(); x++)
-        {
-            clients.get(x).enviarJuego(paquete);
-        }
-    }
+    
 }

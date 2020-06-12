@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import virusgames.controller.LogicalGame;
+import virusgames.util.AppContext;
 
 /**
  *
@@ -34,17 +35,13 @@ class User extends Thread {
     public Boolean isClientAvaible = true;
     public static int cantidadJugadores = 0;
     public Thread procesoCliente;
-    public Thread procesoJuego;
     public ArrayList<Object> paquete = new ArrayList<>();
-    public LogicalGame juego = null;
+    public static LogicalGame juego = null;
     public ArrayList<String> usersName;
     public int turno;
-    public boolean changeCards = false;
+    public boolean changeCard = false;
+    public static boolean pasarTurno = false;
     
-    public User(int id)
-    {
-        this.id = id;
-    }
     
     public User(int id, String username, int idEnable, Cliente cliente, String hostID) {
         this.id = id;
@@ -72,32 +69,25 @@ class User extends Thread {
                             escena = true;
                             cantidadJugadores = (int) paquete.get(1);
                             usersName = (ArrayList<String>) paquete.get(2);
-                            turno = (int) paquete.get(3);
+                             turno = (int) paquete.get(3);
                         }
                         paquete = null;
                         paquete = (ArrayList<Object>) ois.readObject();
-                        juego = (LogicalGame)paquete.get(0);
-                        procesoCliente = null;
-                        procesoJuego.start();
-                    } catch (IOException | ClassNotFoundException ex) {
-                        Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            });
-            procesoCliente.start();
-            
-            procesoJuego = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    do
+                        LogicalGame aux = (LogicalGame)paquete.get(0);
+                        setLogicalGame(aux);
+                        do
                     {
                         if(!juego.isGameFinished)
                         {
                             try {
-                                ArrayList<Object> paquete = (ArrayList<Object>) ois.readObject();
-                                changeCards = (boolean) paquete.get(0);
-                                juego = (LogicalGame) paquete.get(1);
-                                System.out.println("PAQUETE A RECIBIR: "+ paquete);
+                                paquete = (ArrayList<Object>) ois.readObject();
+//                                System.out.println(((LogicalGame)paquete.get(0)).getPlayers() + " Turno Actual: " + ((LogicalGame)paquete.get(0)).turn);
+                                LogicalGame auxGame = (LogicalGame) paquete.get(0);
+                                System.out.println(auxGame);
+                                setLogicalGame(auxGame);
+                                changeCard = true;
+                                AppContext.getInstance().set("cond", changeCard);
+                                paquete = null;
                             } catch (IOException ex) {
                                 Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (ClassNotFoundException ex) {
@@ -106,8 +96,13 @@ class User extends Thread {
                         }
                     }
                     while(!juego.isGameFinished);
+                        procesoCliente = null;
+                    } catch (IOException | ClassNotFoundException ex) {
+                        Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             });
+            procesoCliente.start();
                     
         } catch (IOException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -127,21 +122,36 @@ class User extends Thread {
         }
     }
     
-    public void turnoSiguienteJugador()
+    public void pasarDeTurno(LogicalGame game)    
     {
-        try
-        {
-            oos.writeObject("nextPlayer");
-            Boolean changeCards = true;
-            ArrayList<Object> paquete = new ArrayList<>();
-            paquete.add(changeCards);
-            paquete.add(juego);
-            oos.writeObject(paquete); 
-        }
-        catch(IOException ex)
-        {
+        try {
+            oos.writeObject("pasarDeTurno");
+            System.out.println("Comando Enviado");
+            oos.writeObject(game);
+            System.out.println("Paquete Enviado");
+        } catch (IOException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void setLogicalGame(LogicalGame paquete)
+    {
+        User.juego = paquete;
+    }
+    
+    public LogicalGame getJuego()
+    {
+        return User.juego;
+    }
+    
+    public void setPasarTurno(boolean cond)
+    {
+        User.pasarTurno = cond;
+    }
+    
+    public boolean getPasarTurno()
+    {
+        return User.pasarTurno;
     }
 }
 
@@ -170,6 +180,11 @@ public class Cliente {
         return user.escena;
     }
 
+    public void setChangeView(boolean cond)
+    {
+        user.changeCard = cond;
+    }
+    
     public void desconectarCliente() {
         user.desconectarCliente();
         user.stop();
@@ -187,7 +202,7 @@ public class Cliente {
 
     public LogicalGame getJuego()
     {
-        return user.juego;
+        return user.getJuego();
     }
     
     public ArrayList<String> getUsersName()
@@ -197,28 +212,23 @@ public class Cliente {
     
     public int getTurno()
     {
-        System.out.println(user.turno);
         return user.turno;
     }
-    public void actualizarJuego(LogicalGame logical)
+    
+    public void setPasarTurno(boolean cond)
     {
-        user.juego = logical;
-        user.turnoSiguienteJugador();
+        user.setPasarTurno(cond);
+    }
+    
+    public boolean getPasarTurno()
+    {
+        return user.getPasarTurno();
     }
 
-    public void setCambioCartas(boolean cond)
+    public void pasarDeTurno(LogicalGame game)
     {
-        user.changeCards = cond;
+        user.pasarDeTurno(game);
     }
     
-    public boolean getCambioCartas()
-    {
-        return user.changeCards;
-    }
-    
-    public void finTurno()
-    {
-        
-    }
 } 
     

@@ -138,5 +138,11 @@ public class Jugador implements Serializable{
         condicionColor.put(3, isRedComplete);
         condicionColor.put(4, isGreenComplete);
     }
+
+    @Override
+    public String toString() {
+        return "Jugador{" + "juegoPropio=" + juegoPropio + '}';
+    }
+    
     
 }

@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -78,14 +77,14 @@ public class GameFXMLController extends Controller implements Initializable {
     /*Variables Propias*/
     public ArrayList<VBox> mesasDisponibles = new ArrayList<>();
     public Servidor servidor;
-    public Cliente cliente;
+    public static Cliente cliente;
     public LogicalGame logical;
     public Map<String, String> diccionario;
-    public SimpleIntegerProperty turnoActual = new SimpleIntegerProperty(0);
+    public static SimpleIntegerProperty turnoActual = new SimpleIntegerProperty(0);
     public int jugadorTurno = 0;
-    public Thread actualizarJuego;
     
     /*Variables Relacionada Con La Jugabilidad*/
+    public Thread actualizarJuegoView;
     public SimpleIntegerProperty cantidadCartas = new SimpleIntegerProperty(0);
     public Carta cartaSeleccionada = null;
     public ImageView cartaSeleccionadaIV = null;
@@ -105,7 +104,7 @@ public class GameFXMLController extends Controller implements Initializable {
         
         servidor = (Servidor)AppContext.getInstance().get("servidor");
         cliente = (Cliente)AppContext.getInstance().get("cliente");
-        turnoActual.set(1);
+        turnoActual.setValue(1);
 
         jugadorTurno = cliente.getTurno();
         tableroDinamico(cliente.getCantidadJugadores());
@@ -119,7 +118,7 @@ public class GameFXMLController extends Controller implements Initializable {
         else
         {
             try {
-                Thread.sleep(250);
+                Thread.sleep(100);
             } catch (InterruptedException ex) {
                 Logger.getLogger(GameFXMLController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -127,9 +126,7 @@ public class GameFXMLController extends Controller implements Initializable {
             cargarLogical();
         }
         
-        turnoActual.set(logical.turno);
         asignacionMesasCodigo(cliente.getCantidadJugadores());
-        
         ivMazo.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
             cantidadCartas.set(cantidadCartas.getValue()+1);
             if(cantidadCartas.getValue() == 1)
@@ -170,48 +167,39 @@ public class GameFXMLController extends Controller implements Initializable {
         
         turnoActual.addListener(t->{
             /* Refrescar/Actualizar la vista*/
-            System.out.println("1");
-            if(!jugadorPropio.isWinner)
-            {
-                System.out.println("2.1");
-                Platform.runLater(()-> {
-                    borrarInterfaz(logical.cantidadJugadores);
-                    cargarLogical();
-                });
-            }
+//            borrarInterfaz(logical.cantidadJugadores);
+//            cargarLogical();
         });
         
-        actualizarJuego = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(!cliente.getJuego().isGameFinished)
-                {
-                    try {
-                        Thread.sleep(50);
-                        if(cliente.getCambioCartas())
-                        {
-                            logical = cliente.getJuego();
-                            cliente.setCambioCartas(false);
-                            int turno = logical.turno;
-                            turnoActual.setValue(turno);
-                        }
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(GameFXMLController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        });
-        actualizarJuego.start();
+//        actualizarJuegoView = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (true) {    
+//                    if (AppContext.getInstance().get("cond") != null) {
+//                        
+//                        boolean cond = (Boolean) AppContext.getInstance().get("cond");
+//
+////                    boolean cond = client.getPasarTurno();
+//                        if (cond) {
+//                            System.out.println("Requiere Cambios");
+//                            cliente.setPasarTurno(false);
+//                            logical = cliente.getJuego();
+//                            AppContext.getInstance().set("cond", false);
+//                            turnoActual.setValue(logical.turn);
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//        actualizarJuegoView.start();
     }    
 
     @Override
     public void initialize() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     @FXML
     private void changeCard(ActionEvent event) {
-        System.out.println("Quiere Cambiar " +cantidadCartas+ " cartas");
         if(cartasSelecionada.size() == cantidadCartas.getValue())
         {
             for(int x = 0; x<cartasSelecionada.size() ;x++)
@@ -229,7 +217,7 @@ public class GameFXMLController extends Controller implements Initializable {
         }
         else if(cartasSelecionada.size() < cantidadCartas.getValue())
         {
-            /*Mesaje*/
+            System.out.println("Necesitas seleccionar mas cartas");
         }
     }
     
@@ -323,7 +311,7 @@ public class GameFXMLController extends Controller implements Initializable {
         logical = cliente.getJuego();
     }
     
-    public void cargarLogical() //Carga la partida, situa las carta en el campo correspondiente
+    public void cargarLogical() //Carga la partida, situa las carta en el campo correspondiente --- Validado-Funcional
     {
         if(logical != null)
         {
@@ -376,7 +364,7 @@ public class GameFXMLController extends Controller implements Initializable {
         }
     }
     
-    public void definirMovimientos(ImageView carta, Carta card)//Le asigna movilidad de acuerdo al tipo de carta
+    public void definirMovimientos(ImageView carta, Carta card)//Le asigna movilidad de acuerdo al tipo de carta ---Validado-Funcional
     {
        carta.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
                 if(cantidadCartas.getValue() != 0)
@@ -440,7 +428,7 @@ public class GameFXMLController extends Controller implements Initializable {
        });
     }
 
-    public int tipoCarta(Carta carta)
+    public int tipoCarta(Carta carta) //Validado-Funcional
     {
         if (carta instanceof Organo)
         {
@@ -467,7 +455,7 @@ public class GameFXMLController extends Controller implements Initializable {
             return 0;
         }
     }
-    public void generarDiccionario()
+    public void generarDiccionario() //Validado-Funcional
     {
         diccionario = new HashMap<>();
         diccionario.put("O1", virusgames.VirusGames.class.getResource("resource/O1.png").toString());
@@ -492,7 +480,7 @@ public class GameFXMLController extends Controller implements Initializable {
         diccionario.put("C3", virusgames.VirusGames.class.getResource("resource/C3.png").toString());
     }
     
-    public void eleccionTipoCarta()
+    public void eleccionTipoCarta()//Validado-Funcional
     {
         switch(tipoCarta(cartaSeleccionada))
         {
@@ -508,7 +496,7 @@ public class GameFXMLController extends Controller implements Initializable {
                 break;
         }
     }
-    public void moverOrgano()
+    public void moverOrgano() /*Funcional - Validado*/
     {
         EventHandler event = e->
         {
@@ -529,11 +517,7 @@ public class GameFXMLController extends Controller implements Initializable {
                         mesaPropia.getChildren().add(sp);
                         mesaPropia.setOnMouseClicked(null);
                         tomarCarta(1);
-                        logical.nuevoTurno();
-                        cliente.actualizarJuego(logical);
-                    } else {
-                        System.out.println("ORGANO PARTE 2.2");
-                        System.out.println("Contiene un organo de este mismo color");
+                        pasarDeTurno();
                     }
                 } else {
                     System.out.println("ORGANO PARTE 3");
@@ -1367,5 +1351,17 @@ public class GameFXMLController extends Controller implements Initializable {
     public void moverComodin() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         System.out.println("Comodin");
+    }
+    
+    public void pasarDeTurno()
+    {
+        logical.nuevoTurno();
+//        System.out.println("Turno Actual: " +logical.turno);
+//        System.out.println(logical.mazo.size());
+//        System.out.println(logical.getPlayers().get(0).getJuegoPropio());
+//        System.out.println(logical.getPlayers().get(1).getJuegoPropio());
+//        System.out.println(logical.cartasDesechas);
+//        System.out.println(logical);
+        cliente.pasarDeTurno(logical);
     }
 }

@@ -28,6 +28,7 @@ public final class LogicalGame implements Serializable{
     public ArrayList<Carta> cartasDesechas;
     public int cantidadJugadores;
     public int turno = 1;
+    public int turn ;
     public boolean isGameFinished = false;
     
     public LogicalGame(int cantidadJugadores)
@@ -36,6 +37,7 @@ public final class LogicalGame implements Serializable{
         generarMazo();
         asignarCartas(cantidadJugadores);
         cartasDesechas = new ArrayList<>();
+        this.turn = turno;
     }
     
     public void generarMazo()
@@ -146,21 +148,21 @@ public final class LogicalGame implements Serializable{
         for(int x = 1; x <= mesas; x++)
         {
             ArrayList<Carta> mano = new ArrayList<>();
-            for(int y = 0; y < 1; y++)//Prueba-Arreglar Despues
+            for(int y = 0; y < 3; y++)//Prueba-Arreglar Despues
             {
                 Carta carta = (Carta)mazo.get(0);
                 carta.jugador = x;
                 mano.add(carta);
                 mazo.remove(0);
             }
-            Carta carta = new Organo(1, "O1", 1);
-            carta.jugador = x;
-            mano.add(carta);
-            mazo.remove(0);
-            carta = new Organo(2, "O2", 1);
-            carta.jugador = x;
-            mano.add(carta);
-            mazo.remove(0);
+//            Carta carta = new Organo(1, "O1", 1);
+//            carta.jugador = x;
+//            mano.add(carta);
+//            mazo.remove(0);
+//            carta = new Organo(2, "O2", 1);
+//            carta.jugador = x;
+//            mano.add(carta);
+//            mazo.remove(0);
             Jugador player = new Jugador(mano, x);
             players.add(player);
         }
@@ -177,7 +179,23 @@ public final class LogicalGame implements Serializable{
         {
             turno = 1;
         }
+        System.out.println("Nuevo Turno:" + turno);
+        turn = turno;
         return turno;
     }
+
+//    public static int getTurno() {
+//        return turno;
+//    }
+//
+//    public static void setTurno(int turno) {
+//        LogicalGame.turno = turno;
+//    }
+
+    @Override
+    public String toString() {
+        return "LogicalGame{" +"players=" + players + ", cartasDesechas=" + cartasDesechas + ", cantidadJugadores=" + cantidadJugadores + ", turn=" + turn + ", isGameFinished=" + isGameFinished + '}';
+    }
+    
 }
 
