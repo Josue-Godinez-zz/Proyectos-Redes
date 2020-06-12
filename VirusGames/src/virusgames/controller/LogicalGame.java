@@ -28,7 +28,6 @@ public final class LogicalGame implements Serializable{
     public ArrayList<Carta> cartasDesechas;
     public int cantidadJugadores;
     public int turno = 1;
-    public int turn ;
     public boolean isGameFinished = false;
     
     public LogicalGame(int cantidadJugadores)
@@ -37,7 +36,7 @@ public final class LogicalGame implements Serializable{
         generarMazo();
         asignarCartas(cantidadJugadores);
         cartasDesechas = new ArrayList<>();
-        this.turn = turno;
+        this.turno = turno;
     }
     
     public void generarMazo()
@@ -172,16 +171,13 @@ public final class LogicalGame implements Serializable{
         return players;
     }
     
-    public int nuevoTurno()
+    public void nuevoTurno()
     {
         turno++;
         if(turno > cantidadJugadores)
         {
             turno = 1;
         }
-        System.out.println("Nuevo Turno:" + turno);
-        turn = turno;
-        return turno;
     }
 
 //    public static int getTurno() {
@@ -191,11 +187,6 @@ public final class LogicalGame implements Serializable{
 //    public static void setTurno(int turno) {
 //        LogicalGame.turno = turno;
 //    }
-
-    @Override
-    public String toString() {
-        return "LogicalGame{" +"players=" + players + ", cartasDesechas=" + cartasDesechas + ", cantidadJugadores=" + cantidadJugadores + ", turn=" + turn + ", isGameFinished=" + isGameFinished + '}';
-    }
     
 }
 

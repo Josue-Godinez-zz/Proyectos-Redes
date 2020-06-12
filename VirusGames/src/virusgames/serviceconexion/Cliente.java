@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
 import virusgames.controller.LogicalGame;
+import virusgames.util.AppContext;
 
 /**
  *
@@ -60,9 +61,9 @@ class User extends Thread {
                         ArrayList<Object> paquete = (ArrayList<Object>)ois.readObject();
                         /*Recibe el juego inicial y lo ajusta al cliente*/
                         turno = (int) paquete.get(0);
-                        juego = (LogicalGame) paquete.get(1);
+                        AppContext.getInstance().set("juegoCargado", (LogicalGame) paquete.get(1));
                         cambioVista.set((boolean) paquete.get(2));
-                         
+                        
                          /*Juego*/
 //                         do {
 //                             

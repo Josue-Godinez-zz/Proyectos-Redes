@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -31,6 +33,7 @@ import virusgames.mazo.PersonalStackPane;
 import virusgames.mazo.Tratamiento;
 import virusgames.mazo.Virus;
 import virusgames.serviceconexion.Cliente;
+import virusgames.util.AppContext;
 
 /**
  * FXML Controller class
@@ -110,24 +113,13 @@ public class GameFXMLController extends Controller implements Initializable {
         asignacionMesasInterfaz(cantidadJugador);
         generarDiccionario();
         
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GameFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cargarJuego();
         cargarLogical();
-        
-        
-//        if(cliente.isHost)
-//        {
-//            generarJuego();
-//            cargarLogical();
-//        }
-//        else
-//        {
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(GameFXMLController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            cargarJuego();
-//            cargarLogical();
-//        }
         
         asignacionMesasCodigo(cantidadJugador);
         ivMazo.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
@@ -303,8 +295,15 @@ public class GameFXMLController extends Controller implements Initializable {
           //txtPlayer6.setText(cliente.getUsersName().get(5));
         }
     }
-
-    public void cargarLogical() //Carga la partida, situa las carta en el campo correspondiente --- Validado-Funcional
+    
+    public void cargarJuego()
+    {
+        if(AppContext.getInstance().get("juegoCargado") != null){
+            logical = (LogicalGame) AppContext.getInstance().get("juegoCargado");
+        }
+    }
+    
+    public void cargarLogical() //Carga la partida, situa las carta en el campo correspondiente
     {
         if(logical != null)
         {
