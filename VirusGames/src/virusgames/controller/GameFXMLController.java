@@ -31,7 +31,6 @@ import virusgames.mazo.PersonalStackPane;
 import virusgames.mazo.Tratamiento;
 import virusgames.mazo.Virus;
 import virusgames.serviceconexion.Cliente;
-import virusgames.serviceconexion.Servidor;
 
 /**
  * FXML Controller class
@@ -73,7 +72,6 @@ public class GameFXMLController extends Controller implements Initializable {
     
     /*Variables Propias*/
     public ArrayList<VBox> mesasDisponibles = new ArrayList<>();
-    public Servidor servidor;
     public static Cliente cliente;
     public LogicalGame logical;
     public Map<String, String> diccionario;
@@ -305,18 +303,7 @@ public class GameFXMLController extends Controller implements Initializable {
           //txtPlayer6.setText(cliente.getUsersName().get(5));
         }
     }
-    
-    public void generarJuego()
-    {
-        logical = new LogicalGame(cliente.cantidadPlayer);
-        servidor.enviarJuego(logical);
-    }
-    
-    public void cargarJuego()
-    {
-        logical = cliente.getJuego();
-    }
-    
+
     public void cargarLogical() //Carga la partida, situa las carta en el campo correspondiente --- Validado-Funcional
     {
         if(logical != null)

@@ -11,21 +11,15 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import virusgames.serviceconexion.Cliente;
-import virusgames.serviceconexion.Servidor;
-import virusgames.serviceconexion.ServidorHilo;
 import virusgames.util.AppContext;
 import virusgames.util.FlowController;
 import virusgames.util.Formato;
@@ -40,33 +34,19 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     @FXML
     private AnchorPane root;
     @FXML
-    private Button btnJugar;
-    @FXML
     private Button btnSalir;
-    @FXML
-    private Button btnHost;
-    @FXML
-    private Button btnComenzar;
-    @FXML
-    private Text txtCantJugadores;
     @FXML
     private TextField tbIPHost;
     @FXML
     private Text txtError;
-     @FXML
+    @FXML
     private Button btnJoin;
     @FXML
     private Button btnLogOut;
     @FXML
-    private Text txtPlayerError;
-    @FXML
     private TextField tbUserName;
     @FXML
-    private TextField tbUserHostName;
-    @FXML
-    private TableView<ServidorHilo> tableViewJugador;
-    @FXML
-    private TableColumn<ServidorHilo, String> columJugador;
+    private Button btnReady;
     
     Map<String, String> diccionario = new HashMap<>();
     
@@ -74,91 +54,25 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     Stage stage;
     public SimpleIntegerProperty cantidadJugador = new SimpleIntegerProperty(0);
     public SimpleBooleanProperty isGameStart = new SimpleBooleanProperty(false);
-    public Servidor servidor;
     public Cliente cliente;
     public Boolean isHost;
+    public boolean isReady = false;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cantidadJugador.addListener(t->{
-            txtCantJugadores.setText(cantidadJugador.getValue().toString());
-        });
-        
         isGameStart.addListener(t->{
-            AppContext.getInstance().set("servidor", servidor);
             AppContext.getInstance().set("cliente", cliente);
             FlowController.getInstance().goViewInStage("GameFXML", (Stage)root.getScene().getWindow(), true);
         });
         
        tbUserName.setTextFormatter(Formato.getInstance().maxLengthFormat(7));
        tbIPHost.setTextFormatter(Formato.getInstance().ipFormat());
-       tbUserHostName.setTextFormatter(Formato.getInstance().maxLengthFormat(7));
     }
      @Override
     public void initialize() {
         
         stage = (Stage)root.getScene().getWindow();
-        stage.setOnCloseRequest(e->{
-            if(servidor != null)
-            {
-                servidor.cerrarServidor();
-            }
-            if(cliente != null)
-            {
-                cliente.desconectarCliente();
-            }
-        });
-    }
-
-    @FXML
-    private void OnActionbtnHost(ActionEvent event) {
         
-        if (tbUserHostName.getText().length() != 0) {
-            tbUserHostName.setStyle("");
-            servidor = new Servidor(cantidadJugador);
-            servidor.iniciarProceso();
-            
-            cliente = new Cliente("25.102.38.188");
-            cliente.nuevoClient(0, tbUserHostName.getText(), 0);
-            cliente.isHost = true;
-            
-            /*Setea la lista de jugadores*/
-            tableViewJugador.setItems(servidor.clients);
-            columJugador.setCellValueFactory(ed -> ed.getValue().userName);
-            Servidor.clients.addListener((ListChangeListener<ServidorHilo>) s -> {
-            tableViewJugador.refresh();
-            });
-            
-            Thread changeView = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (cliente != null) {
-                        isGameStart.setValue(cliente.getChangeView());
-                    }
-                }
-            });
-            changeView.start();
-        }
-        else
-        {
-            tbUserHostName.setStyle("-fx-border-color: RED;");
-        }
-    }
-
-    @FXML
-    private void OnActionbtnComenzar(ActionEvent event) {
-        if (servidor != null) {
-            if (cantidadJugador.getValue() > 1) {
-                AppContext.getInstance().set("servidor", servidor);
-                AppContext.getInstance().set("cliente", cliente);
-                txtPlayerError.setVisible(false);
-                servidor.setAcceptClient(false);
-                servidor.setGameStart(true);
-                servidor.startGame();
-            } else {
-                txtPlayerError.setVisible(true);
-            }
-        }
     }
 
     @FXML
@@ -167,7 +81,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
             tbIPHost.setStyle("");
             tbUserName.setStyle("");
             cliente = new Cliente(tbIPHost.getText());
-            cliente.nuevoClient(0, tbUserName.getText(), 0);
+            cliente.nuevoClient(tbUserName.getText());
             tbIPHost.setDisable(true);
             btnJoin.setVisible(false);
             btnLogOut.setVisible(true);
@@ -175,7 +89,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
                 @Override
                 public void run() {
                     while (cliente != null) {
-                        isGameStart.setValue(cliente.getChangeView());
+//                        isGameStart.setValue(cliente.getChangeView());
                     }
                 }
             });
@@ -201,24 +115,6 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     }
 
     @FXML
-    private void client(Event event) {
-        if(servidor != null)
-        {
-            servidor.cerrarServidor();
-        }
-        if(cliente != null)
-        {
-            cliente.desconectarCliente();
-        }
-    }
-    
-    @FXML
-    private void changeView(ActionEvent event) {
-
-   }
-    
-
-    @FXML
     private void exit(ActionEvent event) {
     }
 
@@ -229,6 +125,28 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
         btnJoin.setVisible(true);
         btnLogOut.setVisible(false);
         tbIPHost.setDisable(false);
+    }
+
+    @FXML
+    private void OnActionbtnReady(ActionEvent event) {
+        if(isReady){
+            btnReady.setText("Listo");
+            isReady = false;
+            
+            if(cliente != null){
+                cliente.isReady(isReady);
+            }
+        }
+        else {
+            btnReady.setText("No Listo");
+            isReady = true;
+            
+            if(cliente != null){
+                cliente.isReady(isReady);
+            }
+        }
+        
+        
     }
 
 }
