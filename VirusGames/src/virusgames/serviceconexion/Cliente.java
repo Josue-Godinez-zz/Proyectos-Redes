@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
-import virusgames.controller.LogicalGame;
+import servidor.LogicalGame;
 import virusgames.util.AppContext;
 
 /**

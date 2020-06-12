@@ -25,13 +25,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import virusgames.mazo.Carta;
-import virusgames.mazo.Comodin;
-import virusgames.mazo.Medicina;
-import virusgames.mazo.Organo;
-import virusgames.mazo.PersonalStackPane;
-import virusgames.mazo.Tratamiento;
-import virusgames.mazo.Virus;
+import servidor.LogicalGame;
+import servidor.mazo.Carta;
+import servidor.mazo.Comodin;
+import servidor.mazo.Medicina;
+import servidor.mazo.Organo;
+import servidor.mazo.PersonalStackPane;
+import servidor.mazo.Tratamiento;
+import servidor.mazo.Virus;
+import servidor.Jugador;
 import virusgames.serviceconexion.Cliente;
 import virusgames.util.AppContext;
 
@@ -323,7 +325,7 @@ public class GameFXMLController extends Controller implements Initializable {
                     aux.getChildren().add(carta);
                 }
                 HBox aux2 = (HBox)mesasDisponibles.get(x).getChildren().get(0);
-                Jugador jugador = logical.players.get(x);
+                servidor.Jugador jugador = logical.players.get(x);
                 for(int y = 1; y <= 4; y++)
                 {
                     ArrayList pilaColor = jugador.getJuegoPropio().get(y);
