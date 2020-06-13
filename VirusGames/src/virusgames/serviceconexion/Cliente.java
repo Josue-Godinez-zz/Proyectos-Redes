@@ -10,7 +10,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -34,16 +33,19 @@ class User extends Thread {
     public Boolean isClientAvaible = true;
     public Thread procesoCliente;
     public static SimpleBooleanProperty cambioVista = new SimpleBooleanProperty(false);
+    public static SimpleBooleanProperty nuevoJuego = new SimpleBooleanProperty(false);
     public int turno = 0;
     public ArrayList<Object> paquete = new ArrayList<>();
     public static LogicalGame juego = null;
     public ArrayList<String> usersName = new ArrayList<>();
+    public boolean terminarPartida = false;
     
-    public User(String username,Cliente cliente, String hostID,SimpleBooleanProperty bool ) {
+    public User(String username,Cliente cliente, String hostID,SimpleBooleanProperty bool, SimpleBooleanProperty bool2) {
         this.username = username;
         this.cliente = cliente;
         this.hostID = hostID;
         this.cambioVista.bindBidirectional(bool);
+        this.nuevoJuego.bindBidirectional(bool2);
     }
 
     @Override
@@ -66,10 +68,12 @@ class User extends Thread {
                         usersName.addAll((ArrayList<String>) paquete.get(3));
                         cambioVista.set((boolean) paquete.get(2));
                         System.out.println(paquete.get(2));
+                        
                          /*Juego*/
-//                         do {
-//                             
-//                         } while();
+                        do {
+                            juego = (LogicalGame) ois.readObject();
+                            AppContext.getInstance().set("nuevoJuego", juego);
+                        } while(terminarPartida);
                          /**/
                         } catch (IOException | ClassNotFoundException ex) {
                         Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -139,6 +143,7 @@ public class Cliente {
     public boolean accionRealizada = false;
     public String hostIP;
     public static SimpleBooleanProperty cambiarVista = new SimpleBooleanProperty(false);
+    public static SimpleBooleanProperty nuevoJuego = new SimpleBooleanProperty(false);
 
     public Cliente(String hostIP)
     {
@@ -147,7 +152,7 @@ public class Cliente {
 
     public void nuevoClient(String username)
     {
-        user = new User(username, this, hostIP, cambiarVista);
+        user = new User(username, this, hostIP, cambiarVista, nuevoJuego);
         user.start();
     }
     public void desconectarCliente() {
@@ -167,6 +172,10 @@ public class Cliente {
     public ArrayList<String> getUsersName()
     {
         return user.getUserName();
+    }
+
+    public void pasarDeTurno(LogicalGame logical) {
+        user.pasarDeTurno(logical);
     }
 } 
     

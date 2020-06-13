@@ -161,10 +161,11 @@ public class GameFXMLController extends Controller implements Initializable {
             }
         });
         
-        turnoActual.addListener(t->{
+        cliente.nuevoJuego.addListener(t->{
             /* Refrescar/Actualizar la vista*/
-//            borrarInterfaz(logical.cantidadJugadores);
-//            cargarLogical();
+            logical = (LogicalGame) AppContext.getInstance().get("nuevoJuego");
+            borrarInterfaz(logical.cantidadJugadores);
+            cargarLogical();
         });
         
 //        actualizarJuegoView = new Thread(new Runnable() {
@@ -1362,6 +1363,6 @@ public class GameFXMLController extends Controller implements Initializable {
 //        System.out.println(logical.getPlayers().get(1).getJuegoPropio());
 //        System.out.println(logical.cartasDesechas);
 //        System.out.println(logical);
-        //cliente.pasarDeTurno(logical);
+        cliente.pasarDeTurno(logical);
     }
 }
