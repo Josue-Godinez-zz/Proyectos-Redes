@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -36,7 +37,7 @@ class User extends Thread {
     public int turno = 0;
     public ArrayList<Object> paquete = new ArrayList<>();
     public static LogicalGame juego = null;
-    public ArrayList<String> usersName;
+    public ArrayList<String> usersName = new ArrayList<>();
     
     public User(String username,Cliente cliente, String hostID,SimpleBooleanProperty bool ) {
         this.username = username;
@@ -62,8 +63,9 @@ class User extends Thread {
                         /*Recibe el juego inicial y lo ajusta al cliente*/
                         turno = (int) paquete.get(0);
                         AppContext.getInstance().set("juegoCargado", (LogicalGame) paquete.get(1));
+                        usersName.addAll((ArrayList<String>) paquete.get(3));
                         cambioVista.set((boolean) paquete.get(2));
-                        
+                        System.out.println(paquete.get(2));
                          /*Juego*/
 //                         do {
 //                             
@@ -120,6 +122,16 @@ class User extends Thread {
             
         }
     }
+    
+    public int getTurno()
+    {
+        return turno;
+    }
+    
+    public ArrayList<String> getUserName()
+    {
+        return usersName;
+    }
 }
 
 public class Cliente {
@@ -147,6 +159,14 @@ public class Cliente {
         user.isReady(rdy);
     }
     
+    public int getTurno()
+    {
+        return user.getTurno();
+    }
     
+    public ArrayList<String> getUsersName()
+    {
+        return user.getUserName();
+    }
 } 
     

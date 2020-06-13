@@ -84,6 +84,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
             AppContext.getInstance().set("cliente", cliente);
             FlowController.getInstance().goViewInStage("GameFXML", (Stage)root.getScene().getWindow(), true);
             });
+            
 //            Thread changeView = new Thread(new Runnable() {
 //                @Override
 //                public void run() {

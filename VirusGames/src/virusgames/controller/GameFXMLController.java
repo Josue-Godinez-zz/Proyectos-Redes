@@ -103,14 +103,13 @@ public class GameFXMLController extends Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-//        servidor = (Servidor)AppContext.getInstance().get("servidor");
-//        cliente = (Cliente)AppContext.getInstance().get("cliente");
+        cliente = (Cliente)AppContext.getInstance().get("cliente");
         cantidadJugador=2;
         turnoActual.setValue(1);
         jugadorTurno = 1;
         logical = new LogicalGame(cantidadJugador);
         System.out.println(logical);
-//        jugadorTurno = cliente.getTurno();
+        jugadorTurno = cliente.getTurno();
         tableroDinamico(cantidadJugador);
         asignacionMesasInterfaz(cantidadJugador);
         generarDiccionario();
@@ -224,77 +223,77 @@ public class GameFXMLController extends Controller implements Initializable {
         if(cantidad == 2)
         {
             mesasDisponibles.add(vbMesa1);
-            //txtPlayer1.setText(cliente.getUsersName().get(0));
+            txtPlayer1.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa2);
-            //txtPlayer2.setText(cliente.getUsersName().get(1));
+            txtPlayer2.setText(cliente.getUsersName().get(1));
             vbMesa3.setVisible(false);
-            //txtPlayer3.setVisible(false);
+            txtPlayer3.setVisible(false);
             vbMesa5.setVisible(false);
-            //txtPlayer5.setVisible(false);
+            txtPlayer5.setVisible(false);
             vbMesa4.setVisible(false);
-            //txtPlayer4.setVisible(false);
+            txtPlayer4.setVisible(false);
             vbMesa6.setVisible(false);
-            //txtPlayer6.setVisible(false);
+            txtPlayer6.setVisible(false);
         }
         if(cantidad == 3)
         {
             mesasDisponibles.add(vbMesa1);
-            //txtPlayer1.setText(cliente.getUsersName().get(0));
+            txtPlayer1.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa3);
-            //txtPlayer3.setText(cliente.getUsersName().get(1));
+            txtPlayer3.setText(cliente.getUsersName().get(1));
             mesasDisponibles.add(vbMesa4);
-            //txtPlayer4.setText(cliente.getUsersName().get(2));
+            txtPlayer4.setText(cliente.getUsersName().get(2));
             vbMesa5.setVisible(false);
-            //txtPlayer5.setVisible(false);
+            txtPlayer5.setVisible(false);
             vbMesa2.setVisible(false);
-            //txtPlayer2.setVisible(false);
+            txtPlayer2.setVisible(false);
             vbMesa6.setVisible(false);
-            //txtPlayer6.setVisible(false);
+            txtPlayer6.setVisible(false);
         }
         if(cantidad == 4)
         {
             mesasDisponibles.add(vbMesa3);
-            //txtPlayer3.setText(cliente.getUsersName().get(0));
+            txtPlayer3.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa5);
-            //txtPlayer5.setText(cliente.getUsersName().get(1));
+            txtPlayer5.setText(cliente.getUsersName().get(1));
             mesasDisponibles.add(vbMesa4);
-            //txtPlayer4.setText(cliente.getUsersName().get(2));
+            txtPlayer4.setText(cliente.getUsersName().get(2));
             mesasDisponibles.add(vbMesa6);
-            //txtPlayer6.setText(cliente.getUsersName().get(3));
+            txtPlayer6.setText(cliente.getUsersName().get(3));
             vbMesa2.setVisible(false);
-            //txtPlayer2.setVisible(false);
+            txtPlayer2.setVisible(false);
             vbMesa1.setVisible(false);
-            //txtPlayer1.setVisible(false);
+            txtPlayer1.setVisible(false);
         }
         if(cantidad == 5)
         {
             mesasDisponibles.add(vbMesa2);
-            //txtPlayer2.setText(cliente.getUsersName().get(0));
+            txtPlayer2.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa3);
-            //txtPlayer3.setText(cliente.getUsersName().get(1));
+            txtPlayer3.setText(cliente.getUsersName().get(1));
             mesasDisponibles.add(vbMesa4);
-            //txtPlayer4.setText(cliente.getUsersName().get(2));
+            txtPlayer4.setText(cliente.getUsersName().get(2));
             mesasDisponibles.add(vbMesa5);
-            //txtPlayer5.setText(cliente.getUsersName().get(3));
+            txtPlayer5.setText(cliente.getUsersName().get(3));
             mesasDisponibles.add(vbMesa6);
-            //txtPlayer6.setText(cliente.getUsersName().get(4));
+            txtPlayer6.setText(cliente.getUsersName().get(4));
             vbMesa1.setVisible(false);
-            //txtPlayer1.setVisible(false);
+            txtPlayer1.setVisible(false);
         }
         if(cantidad == 6) 
         {
-          mesasDisponibles.add(vbMesa1);
-          //txtPlayer1.setText(cliente.getUsersName().get(0));
-          mesasDisponibles.add(vbMesa2);
-          //txtPlayer2.setText(cliente.getUsersName().get(1));
-          mesasDisponibles.add(vbMesa3);
-          //txtPlayer3.setText(cliente.getUsersName().get(2));
-          mesasDisponibles.add(vbMesa4);
-          //txtPlayer4.setText(cliente.getUsersName().get(3));
-          mesasDisponibles.add(vbMesa5);
-          //txtPlayer5.setText(cliente.getUsersName().get(4));
-          mesasDisponibles.add(vbMesa6);
-          //txtPlayer6.setText(cliente.getUsersName().get(5));
+            mesasDisponibles.add(vbMesa1);
+            txtPlayer1.setText(cliente.getUsersName().get(0));
+            mesasDisponibles.add(vbMesa2);
+            txtPlayer2.setText(cliente.getUsersName().get(1));
+            mesasDisponibles.add(vbMesa3);
+            txtPlayer3.setText(cliente.getUsersName().get(2));
+            mesasDisponibles.add(vbMesa4);
+            txtPlayer4.setText(cliente.getUsersName().get(3));
+            mesasDisponibles.add(vbMesa5);
+            txtPlayer5.setText(cliente.getUsersName().get(4));
+            mesasDisponibles.add(vbMesa6);
+            txtPlayer6.setText(cliente.getUsersName().get(5));
         }
     }
     
@@ -1339,12 +1338,10 @@ public class GameFXMLController extends Controller implements Initializable {
     }
 
     public void ejecutarTratamiento() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         System.out.println("Tratamiento");
     }
 
     public void moverComodin() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         System.out.println("Comodin");
     }
     

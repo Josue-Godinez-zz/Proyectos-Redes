@@ -100,14 +100,14 @@ public class ServidorHilo extends Thread {
         
     }
     
-    public void enviarJuegoInicial(int turno, LogicalGame logical, boolean cambiarVista)
+    public void enviarJuegoInicial(int turno, LogicalGame logical, boolean cambiarVista, ArrayList<String>username)
     {
         try {
             ArrayList<Object> paquete = new ArrayList<>();
             paquete.add(turno);
             paquete.add(logical);
             paquete.add(cambiarVista);
-            System.out.println(paquete.toString());
+            paquete.add(username);
             oos.writeObject(paquete);
         } catch (IOException ex) {
             Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
@@ -117,4 +117,11 @@ public class ServidorHilo extends Thread {
     private void isReady(Boolean isReady) {
         boolListo.setValue(isReady);
     }
+
+    @Override
+    public String toString() {
+        return "ServidorHilo{" + "userName=" + userName + '}';
+    }
+    
+    
 }

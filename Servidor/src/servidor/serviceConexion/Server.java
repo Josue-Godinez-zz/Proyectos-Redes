@@ -144,10 +144,15 @@ public class Server {
     public void startGame()
     {
         logicalGeneral = new LogicalGame(clients.size());
-        
+        ArrayList<String> username = new ArrayList<>();
         for(int x = 0; x < clients.size(); x++)
         {
-            clients.get(x).enviarJuegoInicial( x+1 , logicalGeneral, true);
+            username.add(clients.get(x).userName.getValue());
+        }
+
+        for(int x = 0; x < clients.size(); x++)
+        {
+            clients.get(x).enviarJuegoInicial( x+1 , logicalGeneral, true, username);
         }
     }
     
