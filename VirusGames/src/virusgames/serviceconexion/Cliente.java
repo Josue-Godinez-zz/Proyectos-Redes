@@ -73,6 +73,7 @@ class User extends Thread {
                         do {
                             juego = (LogicalGame) ois.readObject();
                             AppContext.getInstance().set("nuevoJuego", juego);
+                            nuevoJuego.setValue(!nuevoJuego.getValue());
                         } while(terminarPartida);
                          /**/
                         } catch (IOException | ClassNotFoundException ex) {
