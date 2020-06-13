@@ -73,7 +73,8 @@ class User extends Thread {
                         do {
                             juego = (LogicalGame) ois.readObject();
                             AppContext.getInstance().set("nuevoJuego", juego);
-                            nuevoJuego.setValue(!nuevoJuego.getValue());
+                            boolean newGame = nuevoJuego.get();
+                            nuevoJuego.set(!newGame);
                         } while(terminarPartida);
                          /**/
                         } catch (IOException | ClassNotFoundException ex) {
@@ -144,7 +145,7 @@ public class Cliente {
     public boolean accionRealizada = false;
     public String hostIP;
     public static SimpleBooleanProperty cambiarVista = new SimpleBooleanProperty(false);
-    public static SimpleBooleanProperty nuevoJuego = new SimpleBooleanProperty(false);
+    public SimpleBooleanProperty nuevoJuego = new SimpleBooleanProperty(false);
 
     public Cliente(String hostIP)
     {

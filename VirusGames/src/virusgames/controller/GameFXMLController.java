@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -164,8 +165,11 @@ public class GameFXMLController extends Controller implements Initializable {
         cliente.nuevoJuego.addListener(t->{
             /* Refrescar/Actualizar la vista*/
             logical = (LogicalGame) AppContext.getInstance().get("nuevoJuego");
-            borrarInterfaz(logical.cantidadJugadores);
-            cargarLogical();
+            Platform.runLater(()->{
+                borrarInterfaz(logical.cantidadJugadores);
+                cargarLogical();
+            });
+            
         });
         
 //        actualizarJuegoView = new Thread(new Runnable() {
