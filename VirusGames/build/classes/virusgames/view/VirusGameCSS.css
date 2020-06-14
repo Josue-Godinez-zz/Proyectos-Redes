@@ -3,24 +3,65 @@
  */
 
 @font-face {
-    
+    src: url("../resource/woodcutter_VIRUS.ttf");
 }
 
 *{
     
 }
 
-.label {
-    /*-fx-font-family: "Khmer UI";*/
+.label{
+    -fx-font-family: "woodcutter VIRUS";
 }
 .button {
-    -fx-font-family: "Khmer UI";
+/*    -fx-font-family: "Khmer UI";
     -fx-font-size: 22px;
     -fx-pref-width: 160px;
     -fx-pref-height: 45px;
     -fx-shape: "M 100 300 A 50 50 0 1 1 100 200 L 350 200 A 50 50 0 1 1 350 300 L 100 300";
-    -fx-background-color: whitesmoke;
+    -fx-background-color: whitesmoke;*/
+    
+   
+
+    -fx-background-color: 
+        #090a0c,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Khmer UI";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 22px;
+    -fx-pref-width: 160px;
+    -fx-pref-height: 45px;
+    -fx-padding: 10 20 10 20;
 }
+
+.button:hover{
+    -fx-background-color: 
+        #090a0c,
+        linear-gradient(#20262b, #191d22),
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 4,3,2,4;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Khmer UI";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 22px;
+    -fx-pref-width: 160px;
+    -fx-pref-height: 45px;
+    -fx-padding: 10 20 10 20;
+}
+.button Text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );
+}
+
+
 .anchor-fondo , .tab-pane:top .tab-header-area{
     -fx-background-color: #232231;
 }
