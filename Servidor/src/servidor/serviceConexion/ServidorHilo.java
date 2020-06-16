@@ -98,13 +98,6 @@ public class ServidorHilo extends Thread {
 
     private void actualizarPartida(LogicalGame get) {
         servidor.actualizarPartida(get);
-//        for(ServidorHilo sh: clients){
-//            try {
-//                oos.writeObject(get);
-//            } catch (IOException ex) {
-//                Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
     }
     
     public void enviarJuegoInicial(int turno, LogicalGame logical, boolean cambiarVista, ArrayList<String>username)

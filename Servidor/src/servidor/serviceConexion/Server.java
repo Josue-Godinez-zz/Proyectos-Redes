@@ -143,6 +143,7 @@ public class Server {
     
     public void startGame()
     {
+        System.out.println(clients.size());
         logicalGeneral = new LogicalGame(clients.size());
         ArrayList<String> username = new ArrayList<>();
         for(int x = 0; x < clients.size(); x++)

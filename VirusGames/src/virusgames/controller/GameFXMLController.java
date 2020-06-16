@@ -105,12 +105,9 @@ public class GameFXMLController extends Controller implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
         cliente = (Cliente)AppContext.getInstance().get("cliente");
-        cantidadJugador=2;
         turnoActual.setValue(1);
         jugadorTurno = cliente.getTurno();
-        logical = new LogicalGame(cantidadJugador);
-        tableroDinamico(cantidadJugador);
-        asignacionMesasInterfaz(cantidadJugador);
+        
         generarDiccionario();
         
         try {
@@ -119,6 +116,8 @@ public class GameFXMLController extends Controller implements Initializable {
             Logger.getLogger(GameFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
         cargarJuego();
+        tableroDinamico(cantidadJugador);
+        asignacionMesasInterfaz(cantidadJugador);
         cargarLogical();
         
         asignacionMesasCodigo(cantidadJugador);
@@ -169,28 +168,7 @@ public class GameFXMLController extends Controller implements Initializable {
             });
             
         });
-        
-//        actualizarJuegoView = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                while (true) {    
-//                    if (AppContext.getInstance().get("cond") != null) {
-//                        
-//                        boolean cond = (Boolean) AppContext.getInstance().get("cond");
-//
-////                    boolean cond = client.getPasarTurno();
-//                        if (cond) {
-//                            System.out.println("Requiere Cambios");
-//                            cliente.setPasarTurno(false);
-//                            logical = cliente.getJuego();
-//                            AppContext.getInstance().set("cond", false);
-//                            turnoActual.setValue(logical.turn);
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//        actualizarJuegoView.start();
+
     }    
 
     @Override
@@ -304,6 +282,7 @@ public class GameFXMLController extends Controller implements Initializable {
     {
         if(AppContext.getInstance().get("juegoCargado") != null){
             logical = (LogicalGame) AppContext.getInstance().get("juegoCargado");
+            cantidadJugador = logical.cantidadJugadores;
         }
     }
     
