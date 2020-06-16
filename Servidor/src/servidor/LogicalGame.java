@@ -39,6 +39,16 @@ public final class LogicalGame implements Serializable{
         this.turno = turno;
     }
     
+    public LogicalGame(LogicalGame logical)
+    {
+        this.mazo = logical.mazo;
+        this.cantidadJugadores = logical.cantidadJugadores;
+        this.cartasDesechas = logical.cartasDesechas;
+        this.turno = logical.turno;
+        this.isGameFinished = logical.isGameFinished;
+        this.players = logical.getPlayers();
+    }
+    
     public void generarMazo()
     {
         mazo =  new ArrayList<>();
@@ -179,6 +189,8 @@ public final class LogicalGame implements Serializable{
             turno = 1;
         }
     }
+    
+    
 
 //    public static int getTurno() {
 //        return turno;
@@ -187,6 +199,12 @@ public final class LogicalGame implements Serializable{
 //    public static void setTurno(int turno) {
 //        LogicalGame.turno = turno;
 //    }
+
+    @Override
+    public String toString() {
+        return "LogicalGame{" + "mazo=" + mazo + ", players=" + players + ", cartasDesechas=" + cartasDesechas + ", cantidadJugadores=" + cantidadJugadores + ", turno=" + turno + ", isGameFinished=" + isGameFinished + '}';
+    }
+
     
 }
 

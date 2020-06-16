@@ -476,10 +476,8 @@ public class GameFXMLController extends Controller implements Initializable {
     {
         EventHandler event = e->
         {
-            System.out.println("HOLA");
             if (turnoActual.getValue() == jugadorTurno) {
                 if (!cartaSeleccionada.isPlayed) {
-                    System.out.println("ORGANO PARTE 2.1");
                     int color = cartaSeleccionada.colorCarta;
                     ArrayList<Carta> pilaColor = jugadorPropio.getJuegoPropio().get(color);
                     if (pilaColor.isEmpty()) {
@@ -497,7 +495,6 @@ public class GameFXMLController extends Controller implements Initializable {
                         pasarDeTurno();
                     }
                 } else {
-                    System.out.println("ORGANO PARTE 3");
                     cartaSeleccionada = null;
                     cartaSeleccionadaIV.setOpacity(1);
                     mesaPropia.setOnMouseClicked(null);
@@ -1332,6 +1329,9 @@ public class GameFXMLController extends Controller implements Initializable {
     {
         logical.nuevoTurno();
         turnoActual.set(logical.turno);
-        cliente.pasarDeTurno(logical);
+        LogicalGame newLogical = new LogicalGame(logical);
+        System.out.println(newLogical.toString());
+        System.out.println("TURNO ACTUAL: " + newLogical.turno);
+        cliente.pasarDeTurno(newLogical);
     }
 }

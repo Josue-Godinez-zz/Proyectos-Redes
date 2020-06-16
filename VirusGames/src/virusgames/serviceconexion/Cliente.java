@@ -38,7 +38,7 @@ class User extends Thread {
     public ArrayList<Object> paquete = new ArrayList<>();
     public static LogicalGame juego = null;
     public ArrayList<String> usersName = new ArrayList<>();
-    public boolean terminarPartida = false;
+    public boolean terminarPartida = true;
     
     public User(String username,Cliente cliente, String hostID,SimpleBooleanProperty bool, SimpleBooleanProperty bool2) {
         this.username = username;
