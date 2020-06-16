@@ -155,5 +155,12 @@ public class Server {
             clients.get(x).enviarJuegoInicial( x+1 , logicalGeneral, true, username);
         }
     }
+
+    void actualizarPartida(LogicalGame get) {
+        for(ServidorHilo sh : clients)
+        {
+            sh.enviarJuegoActualizado(get);
+        }
+    }
     
 }

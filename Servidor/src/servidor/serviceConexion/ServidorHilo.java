@@ -97,14 +97,14 @@ public class ServidorHilo extends Thread {
     }
 
     private void actualizarPartida(LogicalGame get) {
-//        servidor.actualizarPartida(get);
-        for(ServidorHilo sh: clients){
-            try {
-                oos.writeObject(get);
-            } catch (IOException ex) {
-                Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        servidor.actualizarPartida(get);
+//        for(ServidorHilo sh: clients){
+//            try {
+//                oos.writeObject(get);
+//            } catch (IOException ex) {
+//                Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
     }
     
     public void enviarJuegoInicial(int turno, LogicalGame logical, boolean cambiarVista, ArrayList<String>username)
@@ -128,6 +128,16 @@ public class ServidorHilo extends Thread {
     @Override
     public String toString() {
         return "ServidorHilo{" + "userName=" + userName + '}';
+    }
+
+    void enviarJuegoActualizado(LogicalGame get) {
+        try {
+            ArrayList<Object> paquete = new ArrayList<>();
+            paquete.add(get);
+            oos.writeObject(paquete);
+        } catch (IOException ex) {
+            Logger.getLogger(ServidorHilo.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     

@@ -71,7 +71,8 @@ class User extends Thread {
                         
                          /*Juego*/
                         do {
-                            juego = (LogicalGame) ois.readObject();
+                            paquete = (ArrayList<Object>) ois.readObject();
+                            juego = (LogicalGame) paquete.get(0);
                             AppContext.getInstance().set("nuevoJuego", juego);
                             boolean newGame = nuevoJuego.get();
                             nuevoJuego.set(!newGame);

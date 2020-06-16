@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import servidor.mazo.Carta;
-import servidor.mazo.Medicina;
-import servidor.mazo.Organo;
-import servidor.mazo.Virus;
 
 /**
  *
@@ -41,18 +38,18 @@ public class Jugador implements Serializable{
         this.mano = mano;
         this.mesa = mesa;
         cartaAmarilla = new ArrayList<>();
-        cartaAmarilla.add(new Organo(1, "O1", 0));
-        cartaAmarilla.add(new Virus(1, "V1", 0));
+//        cartaAmarilla.add(new Organo(1, "O1", 0));
+//        cartaAmarilla.add(new Virus(1, "V1", 0));
         cartaAzul = new ArrayList<>();
-        cartaAzul.add(new Organo(2, "O2", 0));
-        cartaAzul.add(new Medicina(2, "M2", 0));
-        cartaVerde = new ArrayList<>();
-        cartaVerde.add(new Organo(4, "O4", 0));
-        cartaVerde.add(new Virus(4, "V4",0));
+//        cartaAzul.add(new Organo(2, "O2", 0));
+//        cartaAzul.add(new Medicina(2, "M2", 0));
+          cartaVerde = new ArrayList<>();
+//        cartaVerde.add(new Organo(4, "O4", 0));
+//        cartaVerde.add(new Virus(4, "V4",0));
         cartaRoja = new ArrayList<>();
-        cartaRoja.add(new Organo(3, "O3", 0));
-        cartaRoja.add(new Medicina(3, "M3", 0));
-        cartaRoja.add(new Virus(3, "V3", 0));
+//        cartaRoja.add(new Organo(3, "O3", 0));
+//        cartaRoja.add(new Medicina(3, "M3", 0));
+//        cartaRoja.add(new Virus(3, "V3", 0));
         preparaDiccionarioJP();
         prepararDiccionarioCC();
         

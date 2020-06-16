@@ -82,7 +82,7 @@ public class GameFXMLController extends Controller implements Initializable {
     public LogicalGame logical;
     public Map<String, String> diccionario;
     public static SimpleIntegerProperty turnoActual = new SimpleIntegerProperty(0);
-    public int jugadorTurno = 0;
+    public int jugadorTurno;
     
     /*Variables Relacionada Con La Jugabilidad*/
     public int cantidadJugador;
@@ -107,10 +107,8 @@ public class GameFXMLController extends Controller implements Initializable {
         cliente = (Cliente)AppContext.getInstance().get("cliente");
         cantidadJugador=2;
         turnoActual.setValue(1);
-        jugadorTurno = 1;
-        logical = new LogicalGame(cantidadJugador);
-        System.out.println(logical);
         jugadorTurno = cliente.getTurno();
+        logical = new LogicalGame(cantidadJugador);
         tableroDinamico(cantidadJugador);
         asignacionMesasInterfaz(cantidadJugador);
         generarDiccionario();
@@ -330,6 +328,7 @@ public class GameFXMLController extends Controller implements Initializable {
                 }
                 HBox aux2 = (HBox)mesasDisponibles.get(x).getChildren().get(0);
                 servidor.Jugador jugador = logical.players.get(x);
+                turnoActual.set(logical.turno);
                 for(int y = 1; y <= 4; y++)
                 {
                     ArrayList pilaColor = jugador.getJuegoPropio().get(y);
@@ -1353,20 +1352,7 @@ public class GameFXMLController extends Controller implements Initializable {
     public void pasarDeTurno()
     {
         logical.nuevoTurno();
-        jugadorTurno++;
-        turnoActual.set(jugadorTurno);
-        if(jugadorTurno > cantidadJugador)
-        {
-            jugadorTurno =1;
-            turnoActual.set(jugadorTurno);
-        }
-        System.out.println(logical);
-//        System.out.println("Turno Actual: " +logical.turno);
-//        System.out.println(logical.mazo.size());
-//        System.out.println(logical.getPlayers().get(0).getJuegoPropio());
-//        System.out.println(logical.getPlayers().get(1).getJuegoPropio());
-//        System.out.println(logical.cartasDesechas);
-//        System.out.println(logical);
+        turnoActual.set(logical.turno);
         cliente.pasarDeTurno(logical);
     }
 }
