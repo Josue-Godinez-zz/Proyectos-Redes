@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -37,7 +38,9 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     @FXML
     private TextField tbIPHost;
     @FXML
-    private Text txtError;
+    private Label lblVirus;
+    @FXML
+    private Label txtError;
     @FXML
     private Button btnJoin;
     @FXML
@@ -55,6 +58,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
     public Cliente cliente;
     public Boolean isHost;
     public boolean isReady = false;
+   
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
