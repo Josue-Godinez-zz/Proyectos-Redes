@@ -143,7 +143,6 @@ public class Server {
     
     public void startGame()
     {
-        System.out.println(clients.size());
         logicalGeneral = new LogicalGame(clients.size());
         logicalGeneral.turno++;
         ArrayList<String> username = new ArrayList<>();
@@ -159,7 +158,7 @@ public class Server {
     }
 
     void actualizarPartida(LogicalGame get) {
-        System.out.println(get.toString());
+        System.out.println("Version de Logical: " + get.version);
         for(ServidorHilo sh : clients)
         {
             sh.enviarJuegoActualizado(get);

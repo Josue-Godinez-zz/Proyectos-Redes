@@ -29,6 +29,7 @@ public final class LogicalGame implements Serializable{
     public int cantidadJugadores;
     public int turno = 1;
     public boolean isGameFinished = false;
+    public int version = 0;
     
     public LogicalGame(int cantidadJugadores)
     {
@@ -37,6 +38,7 @@ public final class LogicalGame implements Serializable{
         asignarCartas(cantidadJugadores);
         cartasDesechas = new ArrayList<>();
         this.turno = turno;
+        version++;
     }
     
     public LogicalGame(LogicalGame logical)
@@ -47,6 +49,8 @@ public final class LogicalGame implements Serializable{
         this.turno = logical.turno;
         this.isGameFinished = logical.isGameFinished;
         this.players = logical.getPlayers();
+        this.version = logical.version;
+        version++;
     }
     
     public void generarMazo()

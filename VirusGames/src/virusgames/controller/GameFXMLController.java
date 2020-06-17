@@ -79,7 +79,7 @@ public class GameFXMLController extends Controller implements Initializable {
     /*Variables Propias*/
     public ArrayList<VBox> mesasDisponibles = new ArrayList<>();
     public static Cliente cliente;
-    public LogicalGame logical;
+    public static LogicalGame logical;
     public Map<String, String> diccionario;
     public static SimpleIntegerProperty turnoActual = new SimpleIntegerProperty(0);
     public int jugadorTurno;
@@ -161,7 +161,7 @@ public class GameFXMLController extends Controller implements Initializable {
         
         cliente.nuevoJuego.addListener(t->{
             /* Refrescar/Actualizar la vista*/
-            logical = (LogicalGame) AppContext.getInstance().get("nuevoJuego");
+            cargarJuegov2();
             Platform.runLater(()->{
                 borrarInterfaz(logical.cantidadJugadores);
                 cargarLogical();
@@ -282,6 +282,14 @@ public class GameFXMLController extends Controller implements Initializable {
     {
         if(AppContext.getInstance().get("juegoCargado") != null){
             logical = (LogicalGame) AppContext.getInstance().get("juegoCargado");
+            cantidadJugador = logical.cantidadJugadores;
+        }
+    }
+    
+    public void cargarJuegov2()
+    {
+        if(AppContext.getInstance().get("nuevoJuego") != null){
+            logical = (LogicalGame) AppContext.getInstance().get("nuevoJuego");
             cantidadJugador = logical.cantidadJugadores;
         }
     }
@@ -1330,8 +1338,7 @@ public class GameFXMLController extends Controller implements Initializable {
         logical.nuevoTurno();
         turnoActual.set(logical.turno);
         LogicalGame newLogical = new LogicalGame(logical);
-        System.out.println(newLogical.toString());
-        System.out.println("TURNO ACTUAL: " + newLogical.turno);
         cliente.pasarDeTurno(newLogical);
+        logical = null;
     }
 }

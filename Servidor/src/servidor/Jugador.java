@@ -43,7 +43,7 @@ public class Jugador implements Serializable{
         cartaAzul = new ArrayList<>();
 //        cartaAzul.add(new Organo(2, "O2", 0));
 //        cartaAzul.add(new Medicina(2, "M2", 0));
-          cartaVerde = new ArrayList<>();
+        cartaVerde = new ArrayList<>();
 //        cartaVerde.add(new Organo(4, "O4", 0));
 //        cartaVerde.add(new Virus(4, "V4",0));
         cartaRoja = new ArrayList<>();

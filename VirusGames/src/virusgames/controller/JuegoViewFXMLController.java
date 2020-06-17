@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,8 +33,6 @@ import servidor.mazo.Organo;
 import servidor.mazo.PersonalStackPane;
 import servidor.mazo.Tratamiento;
 import servidor.mazo.Virus;
-import static virusgames.controller.GameFXMLController.cliente;
-import static virusgames.controller.GameFXMLController.turnoActual;
 import virusgames.serviceconexion.Cliente;
 import virusgames.util.AppContext;
 
@@ -42,37 +41,29 @@ import virusgames.util.AppContext;
  *
  * @author josue
  */
-public class JuegoViewFXMLController implements Initializable {
+public class JuegoViewFXMLController extends Controller implements Initializable {
 
     @FXML
     private AnchorPane root;
-    @FXML
     private VBox vbMesa3;
     @FXML
     private VBox vbMesa2;
-    @FXML
     private VBox vbMesa4;
-    @FXML
     private VBox vbMesa5;
     @FXML
     private VBox vbMesa1;
-    @FXML
     private VBox vbMesa6;
     @FXML
     private ImageView ivMazo;
     @FXML
     private Button btnDrawCard;
-    @FXML
     private Text txtPlayer3;
     @FXML
     private Text txtPlayer2;
-    @FXML
     private Text txtPlayer4;
     @FXML
     private Text txtPlayer1;
-    @FXML
     private Text txtPlayer5;
-    @FXML
     private Text txtPlayer6;
 
     /*Variables Propias*/
@@ -102,17 +93,36 @@ public class JuegoViewFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cliente = (Cliente)AppContext.getInstance().get("cliente");
-        turnoActual.setValue(1);
-        jugadorTurno = cliente.getTurno();
-        generarDiccionario();
+//        turnoActual.setValue(1);
+//        jugadorTurno = cliente.getTurno();
+//        generarDiccionario();
+//        cargarJuego();
+//
+//        asignacionMesasInterfaz(cantidadJugador);
         cargarJuego();
-
-        asignacionMesasInterfaz(cantidadJugador);
-        cargarLogical();
+        btnDrawCard.setDisable(!true);
+        cliente.nuevoJuego.addListener(t->{
+            /* Refrescar/Actualizar la vista*/
+            cargarJuegov2();
+            Platform.runLater(()->{
+                btnDrawCard.setText("HOLA: " + logical.version);
+            }); 
+        });
     }    
 
     @FXML
     private void changeCard(ActionEvent event) {
+        
+        cliente.pasarDeTurno(new LogicalGame(logical));
+        
+    }
+    
+    public void cargarJuegov2()
+    {
+        if(AppContext.getInstance().get("nuevoJuego") != null){
+            logical = (LogicalGame) AppContext.getInstance().get("nuevoJuego");
+            cantidadJugador = logical.cantidadJugadores;
+        }
     }
     
     public void generarDiccionario() //Validado-Funcional
@@ -155,54 +165,6 @@ public class JuegoViewFXMLController implements Initializable {
             mesasDisponibles.add(vbMesa2);
             txtPlayer2.setText(cliente.getUsersName().get(1));
         }
-        if(cantidad == 3)
-        {
-            mesasDisponibles.add(vbMesa1);
-            txtPlayer1.setText(cliente.getUsersName().get(0));
-            mesasDisponibles.add(vbMesa3);
-            txtPlayer3.setText(cliente.getUsersName().get(1));
-            mesasDisponibles.add(vbMesa4);
-            txtPlayer4.setText(cliente.getUsersName().get(2));
-        }
-        if(cantidad == 4)
-        {
-            mesasDisponibles.add(vbMesa3);
-            txtPlayer3.setText(cliente.getUsersName().get(0));
-            mesasDisponibles.add(vbMesa5);
-            txtPlayer5.setText(cliente.getUsersName().get(1));
-            mesasDisponibles.add(vbMesa4);
-            txtPlayer4.setText(cliente.getUsersName().get(2));
-            mesasDisponibles.add(vbMesa6);
-            txtPlayer6.setText(cliente.getUsersName().get(3));
-        }
-        if(cantidad == 5)
-        {
-            mesasDisponibles.add(vbMesa2);
-            txtPlayer2.setText(cliente.getUsersName().get(0));
-            mesasDisponibles.add(vbMesa3);
-            txtPlayer3.setText(cliente.getUsersName().get(1));
-            mesasDisponibles.add(vbMesa4);
-            txtPlayer4.setText(cliente.getUsersName().get(2));
-            mesasDisponibles.add(vbMesa5);
-            txtPlayer5.setText(cliente.getUsersName().get(3));
-            mesasDisponibles.add(vbMesa6);
-            txtPlayer6.setText(cliente.getUsersName().get(4));
-        }
-        if(cantidad == 6) 
-        {
-            mesasDisponibles.add(vbMesa1);
-            txtPlayer1.setText(cliente.getUsersName().get(0));
-            mesasDisponibles.add(vbMesa2);
-            txtPlayer2.setText(cliente.getUsersName().get(1));
-            mesasDisponibles.add(vbMesa3);
-            txtPlayer3.setText(cliente.getUsersName().get(2));
-            mesasDisponibles.add(vbMesa4);
-            txtPlayer4.setText(cliente.getUsersName().get(3));
-            mesasDisponibles.add(vbMesa5);
-            txtPlayer5.setText(cliente.getUsersName().get(4));
-            mesasDisponibles.add(vbMesa6);
-            txtPlayer6.setText(cliente.getUsersName().get(5));
-        }
     }
     public void asignacionMesasInterfaz(int cantidad)
     {
@@ -221,213 +183,9 @@ public class JuegoViewFXMLController implements Initializable {
                     cartasPropias = (HBox) vbMesa2.getChildren().get(1);
                     mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
                 }   break;
-            case 3:
-                switch (jugadorTurno) {
-                    case 1:
-                        mesaPropia = (HBox) vbMesa1.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa1.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        break;
-                    case 2:
-                        mesaPropia = (HBox) vbMesa3.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa3.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        break;
-                    case 3:
-                        mesaPropia = (HBox) vbMesa4.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa4.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        break;
-                }   break;
-            case 4:
-                switch (jugadorTurno) {
-                    case 1:
-                        mesaPropia = (HBox) vbMesa5.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa5.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 2:
-                        mesaPropia = (HBox) vbMesa3.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa3.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 3:
-                        mesaPropia = (HBox) vbMesa4.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa4.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 4:
-                        mesaPropia = (HBox) vbMesa6.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa6.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        break;
-                }   break;
-            case 5:
-                switch (jugadorTurno) {
-                    case 1:
-                        mesaPropia = (HBox) vbMesa5.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa5.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 2:
-                        mesaPropia = (HBox) vbMesa3.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa3.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 3:
-                        mesaPropia = (HBox) vbMesa2.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa2.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 4:
-                        mesaPropia = (HBox) vbMesa4.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa4.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 5:
-                        mesaPropia = (HBox) vbMesa6.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa6.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        break;
-                }   break;
-            case 6:
-                switch (jugadorTurno) {
-                    case 1:
-                        mesaPropia = (HBox) vbMesa1.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa1.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 2:
-                        mesaPropia = (HBox) vbMesa2.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa2.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 3:
-                        mesaPropia = (HBox) vbMesa3.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa3.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 4:
-                        mesaPropia = (HBox) vbMesa4.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa4.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 5:
-                        mesaPropia = (HBox) vbMesa5.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa5.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa6.getChildren().get(0));
-                        break;
-                    case 6:
-                        mesaPropia = (HBox) vbMesa6.getChildren().get(0);
-                        cartasPropias = (HBox) vbMesa6.getChildren().get(1);
-                        mesaEnemigas.add((HBox) vbMesa1.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa2.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa3.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa4.getChildren().get(0));
-                        mesaEnemigas.add((HBox) vbMesa5.getChildren().get(0));
-                        break;
-                }   break;
         }
     }
-    public void cargarLogical() //Carga la partida, situa las carta en el campo correspondiente
-    {
-        if(logical != null)
-        {
-            for(int x = 0; x < logical.cantidadJugadores; x++)
-            {
-                HBox aux = (HBox) mesasDisponibles.get(x).getChildren().get(1);
-                ArrayList<Carta> manoJugador = logical.players.get(x).getMano();
-                for(int y = 0 ; y < 3; y++)
-                {
-                    String img = (String) manoJugador.get(y).imgCarta;
-                    ImageView carta = new ImageView(new Image(diccionario.get(img)));
-                    carta.setFitHeight(85); 
-                    carta.setFitWidth(62);
-                    carta.setPreserveRatio(true);
-                    carta.setSmooth(true);
-                    definirMovimientos(carta, manoJugador.get(y));
-                    aux.getChildren().add(carta);
-                }
-                HBox aux2 = (HBox)mesasDisponibles.get(x).getChildren().get(0);
-                servidor.Jugador jugador = logical.players.get(x);
-                turnoActual.set(logical.turno);
-                for(int y = 1; y <= 4; y++)
-                {
-                    ArrayList pilaColor = jugador.getJuegoPropio().get(y);
-                    if(!pilaColor.isEmpty())
-                    {
-                        PersonalStackPane sp = new PersonalStackPane(y);
-                        for(int z = 0; z<pilaColor.size(); z++)
-                        {
-                            ImageView img = new ImageView();
-                            img.setFitHeight(85);
-                            img.setFitWidth(62);
-                            img.setPreserveRatio(true);
-                            img.setSmooth(true);
-                            Carta carta = (Carta) pilaColor.get(z);
-                            if(z == 0)
-                            {
-                                img.setImage(new Image(diccionario.get(carta.imgCarta)));
-                            }
-                            else
-                            {
-                                img.setImage(new Image(diccionario.get(carta.imgCarta)));
-                                img.setRotate(13);
-                            }
-                            sp.getChildren().add(img);
-                        }
-                        aux2.getChildren().add(sp);
-                    }
-                }
-            }
-        }
-    }
+    
     public void definirMovimientos(ImageView carta, Carta card)//Le asigna movilidad de acuerdo al tipo de carta ---Validado-Funcional
     {
        carta.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
@@ -567,16 +325,16 @@ public class JuegoViewFXMLController implements Initializable {
         mesaPropia.setOnMouseClicked(event);
     }
     private void moverVirus() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     private void moverMedicina() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     private void ejecutarTratamiento() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     private void moverComodin() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     public void tomarCarta(int cantidad)
     {
@@ -616,293 +374,16 @@ public class JuegoViewFXMLController implements Initializable {
                 }
             }
         }
-        else if(logical.cantidadJugadores == 3)
-        {
-            if(jugadorTurno == 1)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 1;
-                    logical.players.get(0).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 2)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 2;
-                    logical.players.get(1).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 3)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 3;
-                    logical.players.get(2).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-        }
-        else if(logical.cantidadJugadores == 4)
-        {
-            if(jugadorTurno == 1)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 1;
-                    logical.players.get(0).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 2)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 2;
-                    logical.players.get(1).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 3)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 3;
-                    logical.players.get(2).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 4)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 4;
-                    logical.players.get(3).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-        }
-        else if(logical.cantidadJugadores == 5)
-        {
-            if(jugadorTurno == 1)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 1;
-                    logical.players.get(0).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 2)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 2;
-                    logical.players.get(1).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 3)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 3;
-                    logical.players.get(2).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 4)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 4;
-                    logical.players.get(3).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 5)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 5;
-                    logical.players.get(4).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-        }
-        else if(logical.cantidadJugadores == 6)
-        {
-            if(jugadorTurno == 1)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 1;
-                    logical.players.get(0).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 2)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 2;
-                    logical.players.get(1).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 3)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 3;
-                    logical.players.get(2).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 4)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 4;
-                    logical.players.get(3).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 5)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 5;
-                    logical.players.get(4).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-            else if(jugadorTurno == 6)
-            {
-                for(int c = 0; c < cantidad; c++)
-                {
-                    carta = logical.mazo.get(0);
-                    carta.jugador = 6;
-                    logical.players.get(5).getMano().add(carta);
-                    logical.mazo.remove(0);
-                    ivCarta = new ImageView(new Image(diccionario.get(carta.imgCarta)));
-                    ivCarta.setFitHeight(85);
-                    ivCarta.setFitWidth(62);
-                    cartasPropias.getChildren().add(ivCarta);
-                    definirMovimientos(ivCarta, carta);
-                }
-            }
-        }
     }
     public void pasarDeTurno()
     {
         logical.nuevoTurno();
         turnoActual.set(logical.turno);
         cliente.pasarDeTurno(logical);
+    }
+
+    @Override
+    public void initialize() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

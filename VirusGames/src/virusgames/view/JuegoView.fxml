@@ -10,58 +10,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="root" prefHeight="567.0" prefWidth="1039.0" style="-fx-background-color: A8ADB4;" stylesheets="@VirusGameCSS.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="virusgames.controller.JuegoViewFXMLController">
+<AnchorPane id="AnchorPane" fx:id="root" prefHeight="637.0" prefWidth="1039.0" style="-fx-background-color: A8ADB4;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="virusgames.controller.JuegoViewFXMLController">
    <children>
-      <ImageView fitHeight="676.0" fitWidth="1082.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../resource/fondo.jpg" />
-         </image>
-      </ImageView>
-      <VBox fx:id="vbMesa3" alignment="CENTER" layoutX="43.0" layoutY="55.0" prefHeight="208.0" prefWidth="300.0" spacing="5.0">
-         <children>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-style: segments(10, 15, 15, 15)  line-cap round; -fx-border-color: white; -fx-border-width: 3;">
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-style: segments(10, 15, 15, 15)  line-cap round; -fx-border-color: white; -fx-border-width: 3;">
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-         </children>
-      </VBox>
       <VBox fx:id="vbMesa2" alignment="CENTER" layoutX="389.0" layoutY="55.0" prefHeight="208.0" prefWidth="300.0" spacing="5.0">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-style: segments(10, 15, 15, 15)  line-cap round; -fx-border-color: white; -fx-border-width: 3;">
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-style: segments(10, 15, 15, 15)  line-cap round; -fx-border-color: white; -fx-border-width: 3;">
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-         </children>
-      </VBox>
-      <VBox fx:id="vbMesa4" alignment="CENTER" layoutX="728.0" layoutY="55.0" prefHeight="208.0" prefWidth="300.0" spacing="5.0">
-         <children>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-style: segments(10, 15, 15, 15)  line-cap round; -fx-border-color: white; -fx-border-width: 3;">
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-style: segments(10, 15, 15, 15)  line-cap round; -fx-border-color: white; -fx-border-width: 3;">
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-         </children>
-      </VBox>
-      <VBox fx:id="vbMesa5" alignment="CENTER" layoutX="47.0" layoutY="418.0" prefHeight="208.0" prefWidth="300.0" spacing="5.0">
-         <children>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-style: segments(10, 15, 15, 15)  line-cap round; -fx-border-width: 3; -fx-border-color: white;">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
@@ -87,52 +40,18 @@
             </HBox>
          </children>
       </VBox>
-      <VBox fx:id="vbMesa6" alignment="CENTER" layoutX="732.0" layoutY="418.0" prefHeight="208.0" prefWidth="300.0" spacing="5.0">
-         <children>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-style: segments(10, 15, 15, 15)  line-cap round; -fx-border-width: 3; -fx-border-color: white;">
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-style: segments(10, 15, 15, 15)  line-cap round; -fx-border-width: 3; -fx-border-color: white;">
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-         </children>
-      </VBox>
       <ImageView fx:id="ivMazo" fitHeight="85.0" fitWidth="62.0" layoutX="457.0" layoutY="296.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" rotate="270.0">
          <image>
             <Image url="@../resource/Carta.jpg" />
          </image>
       </ImageView>
       <Button id="btnDraw" fx:id="btnDrawCard" alignment="CENTER" disable="true" layoutX="551.0" layoutY="309.0" mnemonicParsing="false" onAction="#changeCard" prefHeight="59.0" prefWidth="85.0" text="DRAW " />
-      <Text fx:id="txtPlayer3" layoutX="157.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
-         <font>
-            <Font name="Comic Sans MS" size="19.0" />
-         </font>
-      </Text>
       <Text fx:id="txtPlayer2" layoutX="515.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
          <font>
             <Font name="Comic Sans MS" size="19.0" />
          </font>
       </Text>
-      <Text fx:id="txtPlayer4" layoutX="878.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
-         <font>
-            <Font name="Comic Sans MS" size="19.0" />
-         </font>
-      </Text>
       <Text fx:id="txtPlayer1" layoutX="515.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
-         <font>
-            <Font name="Comic Sans MS" size="19.0" />
-         </font>
-      </Text>
-      <Text fx:id="txtPlayer5" layoutX="157.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
-         <font>
-            <Font name="Comic Sans MS" size="19.0" />
-         </font>
-      </Text>
-      <Text fx:id="txtPlayer6" layoutX="878.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
          <font>
             <Font name="Comic Sans MS" size="19.0" />
          </font>
