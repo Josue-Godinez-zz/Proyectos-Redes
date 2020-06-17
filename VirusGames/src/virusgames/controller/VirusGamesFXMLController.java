@@ -84,7 +84,7 @@ public class VirusGamesFXMLController extends Controller implements Initializabl
             btnLogOut.setVisible(true);
             Cliente.cambiarVista.addListener(t -> {
             AppContext.getInstance().set("cliente", cliente);
-            FlowController.getInstance().goViewInStage("JuegoView", (Stage)root.getScene().getWindow(), true);
+            FlowController.getInstance().goViewInStage("GameFXML", (Stage)root.getScene().getWindow(), true);
             });
             
 //            Thread changeView = new Thread(new Runnable() {

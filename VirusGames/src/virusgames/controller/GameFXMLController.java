@@ -83,11 +83,10 @@ public class GameFXMLController extends Controller implements Initializable {
     public Map<String, String> diccionario;
     public static SimpleIntegerProperty turnoActual = new SimpleIntegerProperty(0);
     public int jugadorTurno;
+    public SimpleIntegerProperty cantidadCartas = new SimpleIntegerProperty(0);
     
     /*Variables Relacionada Con La Jugabilidad*/
     public int cantidadJugador;
-    public Thread actualizarJuegoView;
-    public SimpleIntegerProperty cantidadCartas = new SimpleIntegerProperty(0);
     public Carta cartaSeleccionada = null;
     public ImageView cartaSeleccionadaIV = null;
     public ArrayList<Carta> cartasSelecionada = new ArrayList<>();
@@ -120,7 +119,6 @@ public class GameFXMLController extends Controller implements Initializable {
         asignacionMesasInterfaz(cantidadJugador);
         cargarLogical();
         
-        asignacionMesasCodigo(cantidadJugador);
         ivMazo.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
             cantidadCartas.set(cantidadCartas.getValue()+1);
             if(cantidadCartas.getValue() == 1)
@@ -283,14 +281,16 @@ public class GameFXMLController extends Controller implements Initializable {
         if(AppContext.getInstance().get("juegoCargado") != null){
             logical = (LogicalGame) AppContext.getInstance().get("juegoCargado");
             cantidadJugador = logical.cantidadJugadores;
+            asignacionMesasCodigo(cantidadJugador);
         }
     }
     
-    public void cargarJuegov2()
+    public void cargarJuegov2() /*LISTO*/
     {
         if(AppContext.getInstance().get("nuevoJuego") != null){
             logical = (LogicalGame) AppContext.getInstance().get("nuevoJuego");
             cantidadJugador = logical.cantidadJugadores;
+            asignacionMesasCodigo(cantidadJugador);
         }
     }
     
@@ -406,7 +406,6 @@ public class GameFXMLController extends Controller implements Initializable {
                                 }
                             }
                         }
-
                     }
                 }
        });

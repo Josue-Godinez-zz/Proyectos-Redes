@@ -35,7 +35,6 @@ import servidor.mazo.Organo;
 import servidor.mazo.PersonalStackPane;
 import servidor.mazo.Tratamiento;
 import servidor.mazo.Virus;
-import static virusgames.controller.GameFXMLController.logical;
 import virusgames.serviceconexion.Cliente;
 import virusgames.util.AppContext;
 
