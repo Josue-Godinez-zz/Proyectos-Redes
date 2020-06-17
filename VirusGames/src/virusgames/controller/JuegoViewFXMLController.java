@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
@@ -33,6 +35,7 @@ import servidor.mazo.Organo;
 import servidor.mazo.PersonalStackPane;
 import servidor.mazo.Tratamiento;
 import servidor.mazo.Virus;
+import static virusgames.controller.GameFXMLController.logical;
 import virusgames.serviceconexion.Cliente;
 import virusgames.util.AppContext;
 
@@ -45,26 +48,18 @@ public class JuegoViewFXMLController extends Controller implements Initializable
 
     @FXML
     private AnchorPane root;
-    private VBox vbMesa3;
     @FXML
     private VBox vbMesa2;
-    private VBox vbMesa4;
-    private VBox vbMesa5;
     @FXML
     private VBox vbMesa1;
-    private VBox vbMesa6;
     @FXML
     private ImageView ivMazo;
     @FXML
     private Button btnDrawCard;
-    private Text txtPlayer3;
     @FXML
     private Text txtPlayer2;
-    private Text txtPlayer4;
     @FXML
     private Text txtPlayer1;
-    private Text txtPlayer5;
-    private Text txtPlayer6;
 
     /*Variables Propias*/
     public ArrayList<VBox> mesasDisponibles = new ArrayList<>();
@@ -93,35 +88,60 @@ public class JuegoViewFXMLController extends Controller implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cliente = (Cliente)AppContext.getInstance().get("cliente");
-//        turnoActual.setValue(1);
-//        jugadorTurno = cliente.getTurno();
-//        generarDiccionario();
-//        cargarJuego();
-//
-//        asignacionMesasInterfaz(cantidadJugador);
+        turnoActual.setValue(1);
+        jugadorTurno = cliente.getTurno();
+        
+        generarDiccionario();
+        
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GameFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         cargarJuego();
+        tableroDinamico(cantidadJugador);
+        asignacionMesasInterfaz(cantidadJugador);
+        cargarLogical();
         btnDrawCard.setDisable(!true);
         cliente.nuevoJuego.addListener(t->{
             /* Refrescar/Actualizar la vista*/
             cargarJuegov2();
             Platform.runLater(()->{
                 btnDrawCard.setText("HOLA: " + logical.version);
+                borrarInterfaz();
+                cargarLogical();
             }); 
         });
     }    
 
+    @Override
+    public void initialize() {
+        
+    }
+    
     @FXML
     private void changeCard(ActionEvent event) {
+        LogicalGame log = new LogicalGame(2);
+        log.version = logical.version + 1;
+        cliente.pasarDeTurno(log);
         
-        cliente.pasarDeTurno(new LogicalGame(logical));
-        
+    }
+    
+    public void cargarJuego()
+    {
+        if(AppContext.getInstance().get("juegoCargado") != null){
+            logical = (LogicalGame) AppContext.getInstance().get("juegoCargado");
+            cantidadJugador = logical.cantidadJugadores;
+            asignacionMesasCodigo(2);
+        }
     }
     
     public void cargarJuegov2()
     {
         if(AppContext.getInstance().get("nuevoJuego") != null){
-            logical = (LogicalGame) AppContext.getInstance().get("nuevoJuego");
+            logical =  (LogicalGame) AppContext.getInstance().get("nuevoJuego");
             cantidadJugador = logical.cantidadJugadores;
+            asignacionMesasCodigo(2);
         }
     }
     
@@ -149,13 +169,7 @@ public class JuegoViewFXMLController extends Controller implements Initializable
         diccionario.put("C2", virusgames.VirusGames.class.getResource("resource/C2.png").toString());
         diccionario.put("C3", virusgames.VirusGames.class.getResource("resource/C3.png").toString());
     }
-    public void cargarJuego()
-    {
-        if(AppContext.getInstance().get("juegoCargado") != null){
-            logical = (LogicalGame) AppContext.getInstance().get("juegoCargado");
-            cantidadJugador = logical.cantidadJugadores;
-        }
-    }
+    
     public void tableroDinamico(int cantidad)
     {
         if(cantidad == 2)
@@ -381,9 +395,87 @@ public class JuegoViewFXMLController extends Controller implements Initializable
         turnoActual.set(logical.turno);
         cliente.pasarDeTurno(logical);
     }
+    
+    public void cargarLogical() //Carga la partida, situa las carta en el campo correspondiente
+    {
+        if(logical != null)
+        {
+            for(int x = 0; x < logical.cantidadJugadores; x++)
+            {
+                HBox aux = (HBox) mesasDisponibles.get(x).getChildren().get(1);
+                ArrayList<Carta> manoJugador = logical.players.get(x).getMano();
+                for(int y = 0 ; y < 3; y++)
+                {
+                    String img = (String) manoJugador.get(y).imgCarta;
+                    ImageView carta = new ImageView(new Image(diccionario.get(img)));
+                    carta.setFitHeight(85);
+                    carta.setFitWidth(62);
+                    carta.setPreserveRatio(true);
+                    carta.setSmooth(true);
+                    definirMovimientos(carta, manoJugador.get(y));
+                    aux.getChildren().add(carta);
+                }
+                HBox aux2 = (HBox)mesasDisponibles.get(x).getChildren().get(0);
+                servidor.Jugador jugador = logical.players.get(x);
+                turnoActual.set(logical.turno);
+                for(int y = 1; y <= 4; y++)
+                {
+                    ArrayList pilaColor = jugador.getJuegoPropio().get(y);
+                    if(!pilaColor.isEmpty())
+                    {
+                        PersonalStackPane sp = new PersonalStackPane(y);
+                        for(int z = 0; z<pilaColor.size(); z++)
+                        {
+                            ImageView img = new ImageView();
+                            img.setFitHeight(85);
+                            img.setFitWidth(62);
+                            img.setPreserveRatio(true);
+                            img.setSmooth(true);
+                            Carta carta = (Carta) pilaColor.get(z);
+                            if(z == 0)
+                            {
+                                img.setImage(new Image(diccionario.get(carta.imgCarta)));
+                            }
+                            else
+                            {
+                                img.setImage(new Image(diccionario.get(carta.imgCarta)));
+                                img.setRotate(13);
+                            }
+                            sp.getChildren().add(img);
+                        }
+                        aux2.getChildren().add(sp);
+                    }
+                }
+            }
+        }
+    }
 
-    @Override
-    public void initialize() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void borrarInterfaz() {
+        HBox hbAux;
+        hbAux = (HBox) vbMesa1.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa1.getChildren().get(1);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa2.getChildren().get(0);
+            hbAux.getChildren().clear();
+            hbAux = (HBox) vbMesa2.getChildren().get(1);
+            hbAux.getChildren().clear();
+    }
+    
+    public void asignacionMesasCodigo(int cantidadJugadores) {
+        jugadoresEnemigos = new ArrayList<>();
+        if(cantidadJugadores == 2)
+        {
+            if(jugadorTurno == 1)
+            {
+                jugadorPropio = logical.getPlayers().get(0);
+                jugadoresEnemigos.add(logical.getPlayers().get(1));
+            }
+            else if(jugadorTurno == 2)
+            {
+                jugadorPropio = logical.getPlayers().get(1);
+                jugadoresEnemigos.add(logical.getPlayers().get(0));
+            }
+        }
     }
 }
