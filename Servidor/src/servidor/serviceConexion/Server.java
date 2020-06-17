@@ -144,7 +144,7 @@ public class Server {
     public void startGame()
     {
         logicalGeneral = new LogicalGame(clients.size());
-        logicalGeneral.turno++;
+        //logicalGeneral.turno++;
         ArrayList<String> username = new ArrayList<>();
         for(int x = 0; x < clients.size(); x++)
         {

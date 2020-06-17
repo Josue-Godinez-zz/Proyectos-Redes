@@ -337,7 +337,14 @@ public class GameFXMLController extends Controller implements Initializable {
                             else
                             {
                                 img.setImage(new Image(diccionario.get(carta.imgCarta)));
-                                img.setRotate(13);
+                                if(carta instanceof Virus)
+                                {
+                                    img.setRotate(13);
+                                }
+                                else
+                                {
+                                    img.setRotate(347);
+                                }
                             }
                             sp.getChildren().add(img);
                         }
@@ -553,21 +560,23 @@ public class GameFXMLController extends Controller implements Initializable {
                                     int tipo = tipoCarta(pilaColor.get(1));
                                     switch(tipo)
                                     {
-                                        case 2:
+                                        case 2:  /*Virus*/
                                             for(Carta c : pilaColor)
                                             {
                                                 c.isPlayed = false;
                                             }
                                             logical.cartasDesechas.addAll(pilaColor);
                                             logical.cartasDesechas.add(cartaSeleccionada);
+                                            jugadorPropio.getMano().remove(cartaSeleccionada);
                                             pilaColor.clear();
                                             tomarCarta(1);
                                             pasarDeTurno();
                                             break;
-                                        case 3:
+                                        case 3: /*Medicamento*/
                                             logical.cartasDesechas.add(pilaColor.get(1));
                                             logical.cartasDesechas.add(cartaSeleccionada);
                                             pilaColor.remove(1);
+                                            jugadorPropio.getMano().remove(cartaSeleccionada);
                                             tomarCarta(1);
                                             pasarDeTurno();
                                             break;
@@ -608,8 +617,20 @@ public class GameFXMLController extends Controller implements Initializable {
                        {
                            if(pilaColor.size() == 1)
                            {
-                               cartaSeleccionada.isPlayed = true;
-                               pilaColor.add(cartaSeleccionada);
+                                pilaColor.add(cartaSeleccionada);
+                                for (int i = 0; i < mesaPropia.getChildren().size(); i++) {
+                                   PersonalStackPane psp = (PersonalStackPane) mesaPropia.getChildren().get(i);
+                                   if (psp.colorCarta == color) {
+                                       cartaSeleccionadaIV.setRotate(347);
+                                       cartaSeleccionadaIV.setOpacity(1);
+                                       psp.getChildren().add(cartaSeleccionadaIV);
+                                       jugadorPropio.getMano().remove(cartaSeleccionada);
+                                       mesaPropia.getChildren().remove(cartaSeleccionadaIV);
+                                       cartaSeleccionada.isPlayed = true;
+                                       tomarCarta(1);
+                                       pasarDeTurno();
+                                   }
+                               }
                            }
                            else
                            {
