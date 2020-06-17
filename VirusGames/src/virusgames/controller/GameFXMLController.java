@@ -479,7 +479,7 @@ public class GameFXMLController extends Controller implements Initializable {
                 break;
         }
     }
-    public void moverOrgano() /*Funcional - Validado*/
+    public void moverOrgano() /*Funcional - Validado - Listo*/
     {
         EventHandler event = e->
         {
@@ -512,7 +512,7 @@ public class GameFXMLController extends Controller implements Initializable {
         
     }
     
-    public void moverVirus()
+    public void moverVirus() /*Fase Beta - SemiValidado*/
     {
         EventHandler event = e->
         {
@@ -544,7 +544,33 @@ public class GameFXMLController extends Controller implements Initializable {
                                             mesaPropia.getChildren().remove(cartaSeleccionadaIV);
                                             cartaSeleccionada.isPlayed = true;
                                             tomarCarta(1);
+                                            pasarDeTurno();
                                         }
+                                    }
+                                }
+                                else if(pilaColor.size() > 1)
+                                {
+                                    int tipo = tipoCarta(pilaColor.get(1));
+                                    switch(tipo)
+                                    {
+                                        case 2:
+                                            for(Carta c : pilaColor)
+                                            {
+                                                c.isPlayed = false;
+                                            }
+                                            logical.cartasDesechas.addAll(pilaColor);
+                                            logical.cartasDesechas.add(cartaSeleccionada);
+                                            pilaColor.clear();
+                                            tomarCarta(1);
+                                            pasarDeTurno();
+                                            break;
+                                        case 3:
+                                            logical.cartasDesechas.add(pilaColor.get(1));
+                                            logical.cartasDesechas.add(cartaSeleccionada);
+                                            pilaColor.remove(1);
+                                            tomarCarta(1);
+                                            pasarDeTurno();
+                                            break;
                                     }
                                 }
                             }
@@ -568,7 +594,32 @@ public class GameFXMLController extends Controller implements Initializable {
 
     public void moverMedicina() 
     {
-        System.out.println("Medicina");
+        EventHandler event = e ->
+        {
+            if(jugadorTurno == turnoActual.getValue())
+            {
+                if(!cartaSeleccionada.isPlayed)
+                {
+                   int color = cartaSeleccionada.colorCarta;
+                   if(!jugadorPropio.condicionColor.get(color))
+                   {
+                       ArrayList<Carta> pilaColor = jugadorPropio.getJuegoPropio().get(color);
+                       if(!pilaColor.isEmpty())
+                       {
+                           if(pilaColor.size() == 1)
+                           {
+                               cartaSeleccionada.isPlayed = true;
+                               pilaColor.add(cartaSeleccionada);
+                           }
+                           else
+                           {
+                               
+                           }
+                       }
+                   }
+                }
+            }
+        };
     }
     
     public void asignacionMesasInterfaz(int cantidad)
