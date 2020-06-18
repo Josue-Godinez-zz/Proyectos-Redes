@@ -7,6 +7,7 @@ package virusgames.controller;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -895,6 +896,12 @@ public class GameFXMLController extends Controller implements Initializable {
     {
         Carta carta;
         ImageView ivCarta;
+        
+        if(logical.mazo.size() <= 3){
+            Collections.shuffle(logical.cartasDesechas);
+            logical.mazo.addAll(logical.cartasDesechas);
+            logical.cartasDesechas.clear();
+        }
         
         if(logical.cantidadJugadores == 2) /*Terminar*/
         {
