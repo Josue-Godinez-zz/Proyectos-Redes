@@ -681,16 +681,25 @@ public class GameFXMLController extends Controller implements Initializable {
                                 switch(tipo)
                                 {
                                     case 3:  /*Medicina*/
-                                        for(Carta c : pilaColor)
+                                        for(int x = 0; x < mesaPropia.getChildren().size(); x++)
                                         {
-                                            c.isPlayed = false;
+                                            PersonalStackPane psp = (PersonalStackPane) mesaPropia.getChildren().get(x);
+                                            if(psp.colorCarta == color)
+                                            {
+                                                cartaSeleccionadaIV.setRotate(347);
+                                                cartaSeleccionadaIV.setOpacity(1);
+                                                psp.getChildren().add(cartaSeleccionadaIV);
+                                                jugadorPropio.getJuegoPropio().get(color).add(cartaSeleccionada);
+                                                jugadorPropio.getMano().remove(cartaSeleccionada);
+                                                Boolean cond = jugadorPropio.condicionColor.get(color);
+                                                cond = true;
+                                                HBox icons = iconsPlayers.get(jugadorTurno-1);
+                                                ImageView imgAux = (ImageView) icons.getChildren().get(color - 1);
+                                                imgAux.setOpacity(1);
+                                                tomarCarta(1);
+                                                pasarDeTurno();
+                                            }
                                         }
-                                        logical.cartasDesechas.addAll(pilaColor);
-                                        logical.cartasDesechas.add(cartaSeleccionada);
-                                        jugadorPropio.getMano().remove(cartaSeleccionada);
-                                        pilaColor.clear();
-                                        tomarCarta(1);
-                                        pasarDeTurno();
                                         break;
                                     case 2: /*Virus*/
                                         logical.cartasDesechas.add(pilaColor.get(1));
