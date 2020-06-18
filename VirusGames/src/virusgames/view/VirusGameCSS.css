@@ -65,13 +65,24 @@
 }
 #btnDraw
 {
+    -fx-pref-width: 125px;
+    -fx-pref-height: 50px;
     -fx-border-color: #999900;
     -fx-border-style: dotted;
     -fx-background-color: #9999ff;
     -fx-shape: "M 150 350 Q 200 250 150 150 C 200 200 250 150 300 200 C 350 150 400 200 450 150 Q 400 250 450 350 C 350 300 400 350 300 300 C 200 350 250 300 150 350 ";
 }
+#btnAyuda {
+    -fx-pref-width: 60px;
+    -fx-pref-height: 60px;
+    -fx-background-color: #9999ff;
+    -fx-shape: "M 400 300 Q 375 275 400 250 Q 425 225 450 250 Q 475 275 450 300 Q 425 325 400 300 ";
+}
 
 #btnDraw :hover
 {
     -fx-background-color: #66ff66;
+}
+#txtAyuda {
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
 }

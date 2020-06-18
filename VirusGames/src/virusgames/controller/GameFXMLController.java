@@ -27,6 +27,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import servidor.LogicalGame;
 import servidor.mazo.Carta;
 import servidor.mazo.Comodin;
@@ -38,6 +39,7 @@ import servidor.mazo.Virus;
 import servidor.Jugador;
 import virusgames.serviceconexion.Cliente;
 import virusgames.util.AppContext;
+import virusgames.util.FlowController;
 
 /**
  * FXML Controller class
@@ -110,6 +112,8 @@ public class GameFXMLController extends Controller implements Initializable {
     public Jugador jugadorPropio;
     public ArrayList<Jugador> jugadoresEnemigos;
     public ArrayList<HBox> iconsPlayers = new ArrayList<>();
+    @FXML
+    private Button btnAyuda;
     
     /**
      * Initializes the controller class.
@@ -1501,5 +1505,10 @@ public class GameFXMLController extends Controller implements Initializable {
         LogicalGame newLogical = new LogicalGame(logical);
         cliente.pasarDeTurno(newLogical);
         logical = null;
+    }
+
+    @FXML
+    private void OnActionbtnAyuda(ActionEvent event) {
+        FlowController.getInstance().goViewInWindowModal("ayudaView", (Stage) btnAyuda.getScene().getWindow(), false);
     }
 }

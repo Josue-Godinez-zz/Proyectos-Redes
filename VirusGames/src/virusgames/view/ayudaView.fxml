@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="540.0" prefWidth="969.0" style="-fx-background-color: black;" stylesheets="@VirusGameCSS.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="virusgames.controller.AyudaViewController">
+   <children>
+      <Button fx:id="btnAtras" layoutX="145.0" layoutY="457.0" maxWidth="120.0" mnemonicParsing="false" onAction="#OnActionbtnAtras" prefHeight="42.0" prefWidth="96.0" text="Atras" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="145.0" />
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="53.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" rotate="-16.7" AnchorPane.leftAnchor="53.0" AnchorPane.topAnchor="39.0">
+         <image>
+            <Image url="@../resource/V3.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="70.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="39.0">
+         <image>
+            <Image url="@../resource/V4.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="96.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" rotate="14.0" AnchorPane.leftAnchor="96.0" AnchorPane.topAnchor="40.0">
+         <image>
+            <Image url="@../resource/V1.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="199.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" rotate="-16.0" AnchorPane.leftAnchor="199.0" AnchorPane.topAnchor="37.0">
+         <image>
+            <Image url="@../resource/M3.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="219.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="219.0" AnchorPane.topAnchor="37.0">
+         <image>
+            <Image url="@../resource/M4.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="243.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" rotate="16.0" AnchorPane.leftAnchor="243.0" AnchorPane.topAnchor="39.0">
+         <image>
+            <Image url="@../resource/M1.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="47.0" layoutY="209.0" pickOnBounds="true" preserveRatio="true" rotate="-16.0" AnchorPane.leftAnchor="47.0" AnchorPane.topAnchor="209.0">
+         <image>
+            <Image url="@../resource/O3.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="66.0" layoutY="209.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="66.0" AnchorPane.topAnchor="209.0">
+         <image>
+            <Image url="@../resource/O4.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="90.0" layoutY="210.0" pickOnBounds="true" preserveRatio="true" rotate="16.0" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="210.0">
+         <image>
+            <Image url="@../resource/O1.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="17.0" layoutY="349.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="41.0" AnchorPane.topAnchor="349.0">
+         <image>
+            <Image url="@../resource/T1.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="90.0" layoutY="349.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="114.0" AnchorPane.topAnchor="349.0">
+         <image>
+            <Image url="@../resource/T2.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="165.0" layoutY="349.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="189.0" AnchorPane.topAnchor="349.0">
+         <image>
+            <Image url="@../resource/T3.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="237.0" layoutY="349.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="261.0" AnchorPane.topAnchor="349.0">
+         <image>
+            <Image url="@../resource/T4.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="307.0" layoutY="349.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="331.0" AnchorPane.topAnchor="349.0">
+         <image>
+            <Image url="@../resource/T5.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="75.0" layoutY="138.0" text="virus" textFill="WHITE" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="138.0" />
+      <Label layoutX="190.0" layoutY="135.0" text="medicamentos" textFill="WHITE" AnchorPane.leftAnchor="190.0" AnchorPane.topAnchor="135.0" />
+      <Label layoutX="64.0" layoutY="307.0" text="Organos" textFill="WHITE" AnchorPane.leftAnchor="64.0" AnchorPane.topAnchor="307.0" />
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="198.0" layoutY="212.0" pickOnBounds="true" preserveRatio="true" rotate="-16.0" AnchorPane.leftAnchor="198.0" AnchorPane.topAnchor="212.0">
+         <image>
+            <Image url="@../resource/C3.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="217.0" layoutY="212.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="217.0" AnchorPane.topAnchor="212.0">
+         <image>
+            <Image url="@../resource/C2.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="72.0" fitWidth="57.0" layoutX="241.0" layoutY="215.0" pickOnBounds="true" preserveRatio="true" rotate="16.0" AnchorPane.leftAnchor="241.0" AnchorPane.topAnchor="215.0">
+         <image>
+            <Image url="@../resource/C1.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="205.0" layoutY="304.0" text="comodines" textFill="WHITE" AnchorPane.leftAnchor="205.0" AnchorPane.topAnchor="304.0" />
+      <JFXTextArea id="txtAyuda" focusColor="WHITE" layoutX="420.0" layoutY="45.0" prefHeight="460.0" prefWidth="498.0" text="Virus! El juego de cartas ágil y rápido en el que cuanto más rápido propagues tus enfermedades más divertidas serán las partidas.&#10;Es un juego rápido donde las partidas pueden llegar a durar unos 20 minutos y está destinado a jugar entre 2 y 6 jugadores.&#10;Es un juego fantástico para echar unas partidas rápidas después de comer o en unos ratos de descanso.&#10;&#10;Preparación&#10;Repartir 3 cartas a cada jugador.&#10;&#10;Coloca el mazo de cartas restantes boca abajo en el centro de la mesa. Junto a este mazo y boca arriba se irán echando las cartas de descarte de cada jugador o los órganos que unos jugadores le infecten 2 veces a otro jugador.&#10;&#10;Cuando os quedéis sin cartas para robar, sencillo, dadle la vuelta a la pila de descartes y seguir jugando.&#10;&#10;Objetivo del juego&#10;El primer jugador que consiga 4 órganos totalmente sanos es el que gana. Se consideran órganos sanos los órganos que no tienen infección, que están vacunados o los que están inmunizados. &#10;&#10;¿Cómo se juega?&#10;Por turnos cada jugador podrá usar una de las 3 cartas que tenga en su mano.&#10;&#10;¿Qué puedes hacer con tus cartas?&#10;Poner un órgano delante de el en su parte de la mesa (cuerpo)&#10;Podrás usar una medicina para curar un órgano tuyo infectado o vacunarlo para que no te lo infecten.&#10;Infectar con un virus el órgano de un rival.&#10;Usar un tratamiento.&#10;Podrás descartarte de tantas cartas como quieras.&#10;En cada turno SÓLO podrás usar una carta para jugarla en la mesa o hasta las 3 para descartarlas y robar otras.&#10;&#10;Los jugadores SIEMPRE tendrán que tener 3 cartas en la mano. Si juegan una, automáticamente roban otra; si se descartan de 2 o 3, robarán 2 o 3 nuevas.&#10;&#10;Entonces ya se pasa el turno al siguiente jugador.&#10;&#10;El primer jugador que tenga delante de el, en su cuerpo 4 órganos sanos será automáticamente el ganador." unFocusColor="#463c3c" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="420.0" AnchorPane.rightAnchor="51.0" AnchorPane.topAnchor="45.0" />
+   </children>
+</AnchorPane>
