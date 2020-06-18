@@ -106,9 +106,9 @@ public class GameFXMLController extends Controller implements Initializable {
     public ImageView cartaSeleccionadaIV = null;
     public ArrayList<Carta> cartasSelecionada = new ArrayList<>();
     public ArrayList<ImageView> cartasSelecionadaIV = new ArrayList<>();
-    public HBox mesaPropia;
-    public HBox cartasPropias;
-    public ArrayList<HBox> mesaEnemigas;
+    public HBox mesaPropia; //Mesas Donde Tengo Mis Propias Cartas
+    public HBox cartasPropias;//Mesas Donde Tengo Mis Propias Cartas Jugadas
+    public ArrayList<HBox> mesaEnemigas;//Mesas Donde Rivales Tienes Propias Cartas
     public Jugador jugadorPropio;
     public ArrayList<Jugador> jugadoresEnemigos;
     public ArrayList<HBox> iconsPlayers = new ArrayList<>();
@@ -138,46 +138,42 @@ public class GameFXMLController extends Controller implements Initializable {
         cargarLogical();
         
         ivMazo.addEventFilter(MouseEvent.MOUSE_CLICKED, e->{
-            cantidadCartas.set(cantidadCartas.getValue()+1);
-            if(cantidadCartas.getValue() == 1)
-            {
-                if(cartaSeleccionada != null)
-                {
-                    cartaSeleccionada = null;
-                    cartaSeleccionadaIV.setOpacity(1);
-                    cartaSeleccionadaIV = null;
+            if (turnoActual.getValue() == jugadorTurno) {
+                cantidadCartas.set(cantidadCartas.getValue() + 1);
+                if (cantidadCartas.getValue() == 1) {
+                    if (cartaSeleccionada != null) {
+                        cartaSeleccionada = null;
+                        cartaSeleccionadaIV.setOpacity(1);
+                        cartaSeleccionadaIV = null;
+                    }
+                    btnDrawCard.setDisable(false);
+                    btnDrawCard.setText("DRAW <" + cantidadCartas.getValue() + ">");
                 }
-                btnDrawCard.setDisable(false);
-                btnDrawCard.setText("DRAW <"+cantidadCartas.getValue()+">");
-            }
-            if(cantidadCartas.getValue() == 2)
-            {
-                btnDrawCard.setText("DRAW <"+cantidadCartas.getValue()+">");
-            }
-            if(cantidadCartas.getValue() == 3)
-            {
-                btnDrawCard.setText("DRAW <"+cantidadCartas.getValue()+">");
-            }
-            if(cantidadCartas.getValue() == 4)
-            {
-                btnDrawCard.setDisable(true);
-                btnDrawCard.setText("DRAW");
-                for(ImageView iv : cartasSelecionadaIV)
-                {
-                    iv.setOpacity(1);
-                    cartasSelecionadaIV.remove(iv);
+                if (cantidadCartas.getValue() == 2) {
+                    btnDrawCard.setText("DRAW <" + cantidadCartas.getValue() + ">");
                 }
-                for(Carta carta : cartasSelecionada)
-                {
-                    cartasSelecionada.remove(carta);
+                if (cantidadCartas.getValue() == 3) {
+                    btnDrawCard.setText("DRAW <" + cantidadCartas.getValue() + ">");
                 }
-                cantidadCartas.setValue(0);
+                if (cantidadCartas.getValue() == 4) {
+                    btnDrawCard.setDisable(true);
+                    btnDrawCard.setText("DRAW");
+                    for (ImageView iv : cartasSelecionadaIV) {
+                        iv.setOpacity(1);
+                        cartasSelecionadaIV.remove(iv);
+                    }
+                    for (Carta carta : cartasSelecionada) {
+                        cartasSelecionada.remove(carta);
+                    }
+                    cantidadCartas.setValue(0);
+                }
             }
         });
         
         cliente.nuevoJuego.addListener(t->{
             /* Refrescar/Actualizar la vista*/
             cargarJuegov2();
+            
             Platform.runLater(()->{
                 borrarInterfaz(logical.cantidadJugadores);
                 cargarLogical();
@@ -365,12 +361,14 @@ public class GameFXMLController extends Controller implements Initializable {
                 servidor.Jugador jugador = logical.players.get(x);
                 turnoActual.set(logical.turno);
                 HBox icon = iconsPlayers.get(x);
-                for(int y = 1; y <= 4; y++)
+                for(int y = 1; y <= 5; y++)
                 {
-                    ImageView imgAux = (ImageView) icon.getChildren().get(y-1);
-                    if(logical.players.get(x).condicionColor.get(y))
+                    if (y != 5) 
                     {
-                        imgAux.setOpacity(1);
+                        ImageView imgAux = (ImageView) icon.getChildren().get(y - 1);
+                        if (logical.players.get(x).condicionColor.get(y)) {
+                            imgAux.setOpacity(1);
+                        }
                     }
                     
                     ArrayList pilaColor = jugador.getJuegoPropio().get(y);
@@ -624,6 +622,10 @@ public class GameFXMLController extends Controller implements Initializable {
                                             logical.cartasDesechas.add(cartaSeleccionada);
                                             jugadorPropio.getMano().remove(cartaSeleccionada);
                                             pilaColor.clear();
+                                            for(HBox me : mesaEnemigas)
+                                            {
+                                                me.setOnMouseClicked(null);
+                                            }
                                             tomarCarta(1);
                                             pasarDeTurno();
                                             break;
@@ -632,6 +634,10 @@ public class GameFXMLController extends Controller implements Initializable {
                                             logical.cartasDesechas.add(cartaSeleccionada);
                                             pilaColor.remove(1);
                                             jugadorPropio.getMano().remove(cartaSeleccionada);
+                                            for(HBox me : mesaEnemigas)
+                                            {
+                                                me.setOnMouseClicked(null);
+                                            }
                                             tomarCarta(1);
                                             pasarDeTurno();
                                             break;
@@ -909,6 +915,10 @@ public class GameFXMLController extends Controller implements Initializable {
         ImageView ivCarta;
         
         if(logical.mazo.size() <= 3){
+            for(Carta c : logical.cartasDesechas)
+            {
+                c.isPlayed = false;
+            }
             Collections.shuffle(logical.cartasDesechas);
             logical.mazo.addAll(logical.cartasDesechas);
             logical.cartasDesechas.clear();
@@ -1496,6 +1506,58 @@ public class GameFXMLController extends Controller implements Initializable {
 
     public void moverComodin() {
         System.out.println("Comodin");
+        
+        if(jugadorTurno == turnoActual.getValue())
+        {
+            if(!cartaSeleccionada.isPlayed)
+            {
+                Comodin comodin = (Comodin) cartaSeleccionada;
+                switch(comodin.tipoComodin)
+                {
+                    case 1:
+                        movimientoComodin1();
+                        break;
+                    case 2:
+                        movimientoComodin2(cartaSeleccionada, cartaSeleccionadaIV);
+                        break;
+                    case 3:
+                        break;
+                }
+            }
+        }
+         
+    }
+    
+    public void movimientoComodin1()
+    {
+        for(HBox enemy: mesaEnemigas)
+        {
+            
+        }
+    }
+    
+    public void movimientoComodin2(Carta carta, ImageView imgCarta)
+    {
+        EventHandler event = e->
+        {
+            Comodin comodin = (Comodin) carta;
+            ArrayList<Carta> pilaComodin = jugadorPropio.getJuegoPropio().get(comodin.colorCarta);
+            if(pilaComodin.isEmpty())
+            {
+                PersonalStackPane psp = new PersonalStackPane(comodin.colorCarta);
+                pilaComodin.add(carta);
+                carta.isPlayed = true;
+                imgCarta.setOpacity(1);
+                jugadorPropio.getMano().remove(carta);
+                mesaPropia.getChildren().add(psp);
+                cartasPropias.getChildren().remove(imgCarta);
+                psp.getChildren().add(imgCarta);
+                mesaPropia.setOnMouseClicked(null);
+                tomarCarta(1);
+                pasarDeTurno();
+            }
+        };
+        mesaPropia.setOnMouseClicked(event);
     }
     
     public void pasarDeTurno()

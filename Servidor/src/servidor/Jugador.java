@@ -24,12 +24,14 @@ public class Jugador implements Serializable{
     private ArrayList<Carta> cartaAmarilla;
     private ArrayList<Carta> cartaVerde;
     private ArrayList<Carta> cartaRoja;
+    private ArrayList<Carta> cartaComodin;
     public Map<Integer, ArrayList<Carta>> juegoPropio;
     public Map<Integer, Boolean> condicionColor;
     private Boolean isYellowComplete = false;
     private Boolean isBlueComplete = false;
     private Boolean isGreenComplete = false;
     private Boolean isRedComplete = false;
+    private Boolean isComodinComplete = false;
     public boolean isWinner = false;
     public int mesa = 0;
     
@@ -38,18 +40,10 @@ public class Jugador implements Serializable{
         this.mano = mano;
         this.mesa = mesa;
         cartaAmarilla = new ArrayList<>();
-//        cartaAmarilla.add(new Organo(1, "O1", 0));
-//        cartaAmarilla.add(new Virus(1, "V1", 0));
         cartaAzul = new ArrayList<>();
-//        cartaAzul.add(new Organo(2, "O2", 0));
-//        cartaAzul.add(new Medicina(2, "M2", 0));
         cartaVerde = new ArrayList<>();
-//        cartaVerde.add(new Organo(4, "O4", 0));
-//        cartaVerde.add(new Virus(4, "V4",0));
         cartaRoja = new ArrayList<>();
-//        cartaRoja.add(new Organo(3, "O3", 0));
-//        cartaRoja.add(new Medicina(3, "M3", 0));
-//        cartaRoja.add(new Virus(3, "V3", 0));
+        cartaComodin = new ArrayList<>();
         preparaDiccionarioJP();
         prepararDiccionarioCC();
         
@@ -106,6 +100,7 @@ public class Jugador implements Serializable{
         juegoPropio.put(2, cartaAzul);
         juegoPropio.put(3, cartaRoja);
         juegoPropio.put(4, cartaVerde);
+        juegoPropio.put(5, cartaComodin);
     }
 
     public boolean isIsYellowComplete() {
@@ -140,12 +135,21 @@ public class Jugador implements Serializable{
         this.isRedComplete = isRedComplete;
     }
 
+    public Boolean getIsComodinComplete() {
+        return isComodinComplete;
+    }
+
+    public void setIsComodinComplete(Boolean isComodinComplete) {
+        this.isComodinComplete = isComodinComplete;
+    }
+    
     private void prepararDiccionarioCC() {
         condicionColor = new HashMap<>();
         condicionColor.put(1, isYellowComplete);
         condicionColor.put(2, isBlueComplete);
         condicionColor.put(3, isRedComplete);
         condicionColor.put(4, isGreenComplete);
+        condicionColor.put(5, isComodinComplete);
     }
 
     @Override
@@ -156,6 +160,13 @@ public class Jugador implements Serializable{
     public Map<Integer, Boolean> getCondicionColor() {
         return condicionColor;
     }
-    
-    
+
+    public ArrayList<Carta> getCartaComodin() {
+        return cartaComodin;
+    }
+
+    public void setCartaComodin(ArrayList<Carta> cartaComodin) {
+        this.cartaComodin = cartaComodin;
+    }
+
 }
