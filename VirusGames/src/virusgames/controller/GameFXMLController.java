@@ -19,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,6 +41,7 @@ import servidor.Jugador;
 import virusgames.serviceconexion.Cliente;
 import virusgames.util.AppContext;
 import virusgames.util.FlowController;
+import virusgames.util.Mensaje;
 
 /**
  * FXML Controller class
@@ -90,6 +92,8 @@ public class GameFXMLController extends Controller implements Initializable {
     private HBox hbIcoP3;
     @FXML
     private HBox hbIcoP5;
+    @FXML
+    private Button btnAyuda;
     
     /*Variables Propias*/
     public ArrayList<VBox> mesasDisponibles = new ArrayList<>();
@@ -112,8 +116,10 @@ public class GameFXMLController extends Controller implements Initializable {
     public Jugador jugadorPropio;
     public ArrayList<Jugador> jugadoresEnemigos;
     public ArrayList<HBox> iconsPlayers = new ArrayList<>();
-    @FXML
-    private Button btnAyuda;
+    
+    /*Variables Auxiliares*/
+    
+    public PersonalStackPane pspAux;
     
     /**
      * Initializes the controller class.
@@ -177,6 +183,10 @@ public class GameFXMLController extends Controller implements Initializable {
             Platform.runLater(()->{
                 borrarInterfaz(logical.cantidadJugadores);
                 cargarLogical();
+                if(turnoActual.getValue() == jugadorTurno)
+                {
+                    new Mensaje().show(Alert.AlertType.INFORMATION, "", "Es Tu Turno");
+                }
             });
             
         });
@@ -374,7 +384,7 @@ public class GameFXMLController extends Controller implements Initializable {
                     ArrayList pilaColor = jugador.getJuegoPropio().get(y);
                     if(!pilaColor.isEmpty())
                     {
-                        PersonalStackPane sp = new PersonalStackPane(y);
+                        PersonalStackPane sp = new PersonalStackPane(y, x+1);
                         for(int z = 0; z<pilaColor.size(); z++)
                         {
                             ImageView img = new ImageView();
@@ -548,7 +558,7 @@ public class GameFXMLController extends Controller implements Initializable {
                     int color = cartaSeleccionada.colorCarta;
                     ArrayList<Carta> pilaColor = jugadorPropio.getJuegoPropio().get(color);
                     if (pilaColor.isEmpty()) {
-                        PersonalStackPane sp = new PersonalStackPane(color);
+                        PersonalStackPane sp = new PersonalStackPane(color, jugadorTurno);
                         cartaSeleccionada.isPlayed = true;
                         pilaColor.add(cartaSeleccionada);
                         logical.players.get(jugadorTurno - 1).getMano().remove(cartaSeleccionada);
@@ -1530,9 +1540,36 @@ public class GameFXMLController extends Controller implements Initializable {
     
     public void movimientoComodin1()
     {
-        for(HBox enemy: mesaEnemigas)
+        EventHandler event = e->
         {
-            
+            if(turnoActual.getValue() == jugadorTurno)
+            {
+                if(!cartaSeleccionada.isPlayed)
+                {
+                    ImageView img = (ImageView) e.getTarget();
+                    pspAux = (PersonalStackPane) img.getParent();
+                    int color = pspAux.colorCarta;
+                    int jugador = pspAux.jugador;
+                    ArrayList<Carta> pilaColor = logical.getPlayers().get(jugador-1).getJuegoPropio().get(color);
+                    System.out.println("Hola?");
+                    if(pilaColor.size() == 1)
+                    {
+                        System.out.println("1 carta");
+                    }
+                    else
+                    {
+                        System.out.println("Mas igual");
+                    }
+                }
+            }
+        };
+        for(HBox me : mesaEnemigas)
+        {
+            for(int x = 0; x<me.getChildren().size(); x++)
+            {
+                PersonalStackPane psp = (PersonalStackPane) me.getChildren().get(x);
+                psp.setOnMouseClicked(event);
+            }
         }
     }
     
@@ -1544,7 +1581,7 @@ public class GameFXMLController extends Controller implements Initializable {
             ArrayList<Carta> pilaComodin = jugadorPropio.getJuegoPropio().get(comodin.colorCarta);
             if(pilaComodin.isEmpty())
             {
-                PersonalStackPane psp = new PersonalStackPane(comodin.colorCarta);
+                PersonalStackPane psp = new PersonalStackPane(comodin.colorCarta, jugadorTurno);
                 pilaComodin.add(carta);
                 carta.isPlayed = true;
                 imgCarta.setOpacity(1);

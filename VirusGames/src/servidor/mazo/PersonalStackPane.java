@@ -14,10 +14,11 @@ import javafx.scene.layout.StackPane;
 public class PersonalStackPane extends StackPane{
 
     public int colorCarta;
-    
-    public PersonalStackPane(int color) {
+    public int jugador;
+    public PersonalStackPane(int color, int jugador) {
         super();
         colorCarta = color;
+        this.jugador = jugador;
         setWidth(62);
         setHeight(85);
     }

@@ -314,7 +314,7 @@ public class JuegoViewFXMLController extends Controller implements Initializable
                     int color = cartaSeleccionada.colorCarta;
                     ArrayList<Carta> pilaColor = jugadorPropio.getJuegoPropio().get(color);
                     if (pilaColor.isEmpty()) {
-                        PersonalStackPane sp = new PersonalStackPane(color);
+                        PersonalStackPane sp = new PersonalStackPane(color, jugadorTurno);
                         cartaSeleccionada.isPlayed = true;
                         pilaColor.add(cartaSeleccionada);
                         logical.players.get(jugadorTurno - 1).getMano().remove(cartaSeleccionada);
@@ -422,7 +422,7 @@ public class JuegoViewFXMLController extends Controller implements Initializable
                     ArrayList pilaColor = jugador.getJuegoPropio().get(y);
                     if(!pilaColor.isEmpty())
                     {
-                        PersonalStackPane sp = new PersonalStackPane(y);
+                        PersonalStackPane sp = new PersonalStackPane(y, x+1);
                         for(int z = 0; z<pilaColor.size(); z++)
                         {
                             ImageView img = new ImageView();
