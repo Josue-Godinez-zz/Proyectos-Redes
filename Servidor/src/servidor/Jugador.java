@@ -26,10 +26,10 @@ public class Jugador implements Serializable{
     private ArrayList<Carta> cartaRoja;
     public Map<Integer, ArrayList<Carta>> juegoPropio;
     public Map<Integer, Boolean> condicionColor;
-    private boolean isYellowComplete = false;
-    private boolean isBlueComplete = false;
-    private boolean isGreenComplete = false;
-    private boolean isRedComplete = false;
+    private Boolean isYellowComplete = false;
+    private Boolean isBlueComplete = false;
+    private Boolean isGreenComplete = false;
+    private Boolean isRedComplete = false;
     public boolean isWinner = false;
     public int mesa = 0;
     
@@ -151,6 +151,10 @@ public class Jugador implements Serializable{
     @Override
     public String toString() {
         return "Jugador{" + "juegoPropio=" + juegoPropio + '}';
+    }
+
+    public Map<Integer, Boolean> getCondicionColor() {
+        return condicionColor;
     }
     
     

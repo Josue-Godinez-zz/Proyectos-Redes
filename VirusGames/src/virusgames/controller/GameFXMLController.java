@@ -360,8 +360,15 @@ public class GameFXMLController extends Controller implements Initializable {
                 HBox aux2 = (HBox)mesasDisponibles.get(x).getChildren().get(0);
                 servidor.Jugador jugador = logical.players.get(x);
                 turnoActual.set(logical.turno);
+                HBox icon = iconsPlayers.get(x);
                 for(int y = 1; y <= 4; y++)
                 {
+                    ImageView imgAux = (ImageView) icon.getChildren().get(y-1);
+                    if(logical.players.get(x).condicionColor.get(y))
+                    {
+                        imgAux.setOpacity(1);
+                    }
+                    
                     ArrayList pilaColor = jugador.getJuegoPropio().get(y);
                     if(!pilaColor.isEmpty())
                     {
@@ -692,8 +699,8 @@ public class GameFXMLController extends Controller implements Initializable {
                                                 psp.getChildren().add(cartaSeleccionadaIV);
                                                 jugadorPropio.getJuegoPropio().get(color).add(cartaSeleccionada);
                                                 jugadorPropio.getMano().remove(cartaSeleccionada);
-                                                Boolean cond = jugadorPropio.condicionColor.get(color);
-                                                cond = true;
+                                                logical.players.get(jugadorTurno-1).getCondicionColor().replace(color, Boolean.TRUE);
+                                                System.out.println(logical.players.get(jugadorTurno-1).getCondicionColor().replace(color, Boolean.TRUE));
                                                 HBox icons = iconsPlayers.get(jugadorTurno-1);
                                                 ImageView imgAux = (ImageView) icons.getChildren().get(color - 1);
                                                 imgAux.setOpacity(1);

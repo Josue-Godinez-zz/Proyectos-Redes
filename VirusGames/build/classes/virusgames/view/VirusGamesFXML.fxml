@@ -20,7 +20,7 @@
       </Label>
       <AnchorPane layoutX="155.0" layoutY="139.0" minHeight="0.0" minWidth="0.0" prefHeight="452.0" prefWidth="776.0" styleClass="anchor-fondo">
          <children>
-            <Button fx:id="btnJoin" layoutX="408.0" layoutY="291.0" mnemonicParsing="false" onAction="#OnActionbtnCliente" text="Unirse" />
+            <Button fx:id="btnJoin" defaultButton="true" layoutX="408.0" layoutY="291.0" mnemonicParsing="false" onAction="#OnActionbtnCliente" text="Unirse" />
             <Text fill="WHITE" layoutX="319.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="IP del Host" textAlignment="CENTER" wrappingWidth="149.0" />
             <TextField fx:id="tbIPHost" alignment="CENTER" layoutX="319.0" layoutY="125.0" promptText="IP Host" text="25.102.38.188" />
             <Button fx:id="btnLogOut" layoutX="167.0" layoutY="291.0" mnemonicParsing="false" onAction="#desconectar" text="Desconectar" />
