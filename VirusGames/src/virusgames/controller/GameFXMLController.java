@@ -75,6 +75,18 @@ public class GameFXMLController extends Controller implements Initializable {
     private Text txtPlayer5;
     @FXML
     private Text txtPlayer6;
+    @FXML
+    private HBox hbIcoP2;
+    @FXML
+    private HBox hbIcoP1;
+    @FXML
+    private HBox hbIcoP4;
+    @FXML
+    private HBox hbIcoP6;
+    @FXML
+    private HBox hbIcoP3;
+    @FXML
+    private HBox hbIcoP5;
     
     /*Variables Propias*/
     public ArrayList<VBox> mesasDisponibles = new ArrayList<>();
@@ -96,6 +108,7 @@ public class GameFXMLController extends Controller implements Initializable {
     public ArrayList<HBox> mesaEnemigas;
     public Jugador jugadorPropio;
     public ArrayList<Jugador> jugadoresEnemigos;
+    public ArrayList<HBox> iconsPlayers = new ArrayList<>();
     
     /**
      * Initializes the controller class.
@@ -202,76 +215,106 @@ public class GameFXMLController extends Controller implements Initializable {
         if(cantidad == 2)
         {
             mesasDisponibles.add(vbMesa1);
+            iconsPlayers.add(hbIcoP1);
             txtPlayer1.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa2);
+            iconsPlayers.add(hbIcoP2);
             txtPlayer2.setText(cliente.getUsersName().get(1));
             vbMesa3.setVisible(false);
+            hbIcoP3.setVisible(false);
             txtPlayer3.setVisible(false);
             vbMesa5.setVisible(false);
+            hbIcoP5.setVisible(false);
             txtPlayer5.setVisible(false);
             vbMesa4.setVisible(false);
+            hbIcoP4.setVisible(false);
             txtPlayer4.setVisible(false);
             vbMesa6.setVisible(false);
+            hbIcoP6.setVisible(false);
             txtPlayer6.setVisible(false);
         }
         if(cantidad == 3)
         {
             mesasDisponibles.add(vbMesa1);
+            iconsPlayers.add(hbIcoP1);
             txtPlayer1.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa3);
+            iconsPlayers.add(hbIcoP3);
             txtPlayer3.setText(cliente.getUsersName().get(1));
             mesasDisponibles.add(vbMesa4);
+            iconsPlayers.add(hbIcoP4);
             txtPlayer4.setText(cliente.getUsersName().get(2));
             vbMesa5.setVisible(false);
+            hbIcoP5.setVisible(false);
             txtPlayer5.setVisible(false);
             vbMesa2.setVisible(false);
+            hbIcoP2.setVisible(false);
             txtPlayer2.setVisible(false);
             vbMesa6.setVisible(false);
+            hbIcoP6.setVisible(false);
             txtPlayer6.setVisible(false);
         }
         if(cantidad == 4)
         {
             mesasDisponibles.add(vbMesa3);
+            iconsPlayers.add(hbIcoP3);
             txtPlayer3.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa5);
+            iconsPlayers.add(hbIcoP5);
             txtPlayer5.setText(cliente.getUsersName().get(1));
             mesasDisponibles.add(vbMesa4);
+            iconsPlayers.add(hbIcoP4);
             txtPlayer4.setText(cliente.getUsersName().get(2));
             mesasDisponibles.add(vbMesa6);
+            iconsPlayers.add(hbIcoP6);
             txtPlayer6.setText(cliente.getUsersName().get(3));
             vbMesa2.setVisible(false);
+            hbIcoP2.setVisible(false);
             txtPlayer2.setVisible(false);
             vbMesa1.setVisible(false);
+            hbIcoP1.setVisible(false);
             txtPlayer1.setVisible(false);
         }
         if(cantidad == 5)
         {
             mesasDisponibles.add(vbMesa2);
+            iconsPlayers.add(hbIcoP2);
             txtPlayer2.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa3);
+            iconsPlayers.add(hbIcoP3);
             txtPlayer3.setText(cliente.getUsersName().get(1));
             mesasDisponibles.add(vbMesa4);
+            iconsPlayers.add(hbIcoP4);
             txtPlayer4.setText(cliente.getUsersName().get(2));
             mesasDisponibles.add(vbMesa5);
+            iconsPlayers.add(hbIcoP5);
             txtPlayer5.setText(cliente.getUsersName().get(3));
             mesasDisponibles.add(vbMesa6);
+            iconsPlayers.add(hbIcoP6);
             txtPlayer6.setText(cliente.getUsersName().get(4));
             vbMesa1.setVisible(false);
+            hbIcoP1.setVisible(false);
             txtPlayer1.setVisible(false);
         }
         if(cantidad == 6) 
         {
             mesasDisponibles.add(vbMesa1);
+            iconsPlayers.add(hbIcoP1);
             txtPlayer1.setText(cliente.getUsersName().get(0));
             mesasDisponibles.add(vbMesa2);
+            iconsPlayers.add(hbIcoP2);
             txtPlayer2.setText(cliente.getUsersName().get(1));
             mesasDisponibles.add(vbMesa3);
+            iconsPlayers.add(hbIcoP3);
             txtPlayer3.setText(cliente.getUsersName().get(2));
             mesasDisponibles.add(vbMesa4);
+            iconsPlayers.add(hbIcoP4);
             txtPlayer4.setText(cliente.getUsersName().get(3));
             mesasDisponibles.add(vbMesa5);
+            iconsPlayers.add(hbIcoP5);
             txtPlayer5.setText(cliente.getUsersName().get(4));
             mesasDisponibles.add(vbMesa6);
+            iconsPlayers.add(hbIcoP6);
             txtPlayer6.setText(cliente.getUsersName().get(5));
         }
     }
@@ -634,13 +677,37 @@ public class GameFXMLController extends Controller implements Initializable {
                            }
                            else
                            {
-                               
+                                int tipo = tipoCarta(pilaColor.get(1));
+                                switch(tipo)
+                                {
+                                    case 3:  /*Medicina*/
+                                        for(Carta c : pilaColor)
+                                        {
+                                            c.isPlayed = false;
+                                        }
+                                        logical.cartasDesechas.addAll(pilaColor);
+                                        logical.cartasDesechas.add(cartaSeleccionada);
+                                        jugadorPropio.getMano().remove(cartaSeleccionada);
+                                        pilaColor.clear();
+                                        tomarCarta(1);
+                                        pasarDeTurno();
+                                        break;
+                                    case 2: /*Virus*/
+                                        logical.cartasDesechas.add(pilaColor.get(1));
+                                        logical.cartasDesechas.add(cartaSeleccionada);
+                                        pilaColor.remove(1);
+                                        jugadorPropio.getMano().remove(cartaSeleccionada);
+                                        tomarCarta(1);
+                                        pasarDeTurno();
+                                        break;
+                                }
                            }
                        }
                    }
                 }
             }
         };
+        mesaPropia.setOnMouseClicked(event);
     }
     
     public void asignacionMesasInterfaz(int cantidad)

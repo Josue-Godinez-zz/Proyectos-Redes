@@ -106,35 +106,197 @@
          </image>
       </ImageView>
       <Button id="btnDraw" fx:id="btnDrawCard" alignment="CENTER" disable="true" layoutX="551.0" layoutY="309.0" mnemonicParsing="false" onAction="#changeCard" prefHeight="59.0" prefWidth="85.0" text="DRAW " />
-      <Text fx:id="txtPlayer3" layoutX="157.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
+      <Text fx:id="txtPlayer3" fill="WHITE" layoutX="156.0" layoutY="41.0" strokeLineCap="BUTT" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
          <font>
             <Font name="Comic Sans MS" size="19.0" />
          </font>
       </Text>
-      <Text fx:id="txtPlayer2" layoutX="515.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
+      <Text fx:id="txtPlayer2" fill="WHITE" layoutX="506.0" layoutY="43.0" strokeLineCap="BUTT" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
          <font>
             <Font name="Comic Sans MS" size="19.0" />
          </font>
       </Text>
-      <Text fx:id="txtPlayer4" layoutX="878.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
+      <Text fx:id="txtPlayer4" fill="WHITE" layoutX="852.0" layoutY="41.0" strokeLineCap="BUTT" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
          <font>
             <Font name="Comic Sans MS" size="19.0" />
          </font>
       </Text>
-      <Text fx:id="txtPlayer1" layoutX="515.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
+      <Text fx:id="txtPlayer1" fill="WHITE" layoutX="507.0" layoutY="655.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
          <font>
             <Font name="Comic Sans MS" size="19.0" />
          </font>
       </Text>
-      <Text fx:id="txtPlayer5" layoutX="157.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
+      <Text fx:id="txtPlayer5" fill="WHITE" layoutX="157.0" layoutY="655.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
          <font>
             <Font name="Comic Sans MS" size="19.0" />
          </font>
       </Text>
-      <Text fx:id="txtPlayer6" layoutX="878.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
+      <Text fx:id="txtPlayer6" fill="WHITE" layoutX="853.0" layoutY="654.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugador" textAlignment="CENTER">
          <font>
             <Font name="Comic Sans MS" size="19.0" />
          </font>
       </Text>
+      <HBox fx:id="hbIcoP2" alignment="CENTER" layoutX="443.0" layoutY="267.0" spacing="20.0">
+         <children>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico1.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico3.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico4.png" />
+               </image>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </HBox>
+      <HBox fx:id="hbIcoP1" layoutX="443.0" layoutY="383.0" spacing="20.0">
+         <children>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico1.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico3.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico4.png" />
+               </image>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </HBox>
+      <HBox fx:id="hbIcoP4" layoutX="791.0" layoutY="267.0" spacing="20.0">
+         <children>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico1.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico3.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico4.png" />
+               </image>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </HBox>
+      <HBox fx:id="hbIcoP6" layoutX="792.0" layoutY="383.0" spacing="20.0">
+         <children>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico1.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico3.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico4.png" />
+               </image>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </HBox>
+      <HBox fx:id="hbIcoP3" layoutX="93.0" layoutY="267.0" spacing="20.0">
+         <children>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico1.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico3.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico4.png" />
+               </image>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </HBox>
+      <HBox fx:id="hbIcoP5" layoutX="94.0" layoutY="383.0" spacing="20.0">
+         <children>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico1.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico3.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="34.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resource/Ico4.png" />
+               </image>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </HBox>
    </children>
 </AnchorPane>
