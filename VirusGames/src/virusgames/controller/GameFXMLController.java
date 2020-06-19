@@ -112,7 +112,7 @@ public class GameFXMLController extends Controller implements Initializable {
     public ArrayList<ImageView> cartasSelecionadaIV = new ArrayList<>();
     public HBox mesaPropia; //Mesas Donde Tengo Mis Propias Cartas
     public HBox cartasPropias;//Mesas Donde Tengo Mis Propias Cartas Jugadas
-    public ArrayList<HBox> mesaEnemigas;//Mesas Donde Rivales Tienes Propias Cartas
+    public ArrayList<HBox> mesaEnemigas;//Mesas Donde Rivales Tienes Propias Cartas Jugadas
     public Jugador jugadorPropio;
     public ArrayList<Jugador> jugadoresEnemigos;
     public ArrayList<HBox> iconsPlayers = new ArrayList<>();
@@ -185,7 +185,7 @@ public class GameFXMLController extends Controller implements Initializable {
                 cargarLogical();
                 if(turnoActual.getValue() == jugadorTurno)
                 {
-                    new Mensaje().show(Alert.AlertType.INFORMATION, "", "Es Tu Turno");
+                    //new Mensaje().show(Alert.AlertType.INFORMATION, "", "Es Tu Turno");
                 }
             });
             
@@ -404,9 +404,21 @@ public class GameFXMLController extends Controller implements Initializable {
                                 {
                                     img.setRotate(13);
                                 }
-                                else
+                                else if(carta instanceof Medicina)
                                 {
                                     img.setRotate(347);
+                                }
+                                else if(carta instanceof Comodin)
+                                {
+                                    Comodin tipo = (Comodin)carta;
+                                    if(tipo.tipoComodin == 1)
+                                    {
+                                        img.setRotate(13);
+                                    }
+                                    else if(tipo.tipoComodin == 2)
+                                    {
+                                        img.setRotate(347);
+                                    }
                                 }
                             }
                             sp.getChildren().add(img);
@@ -1551,14 +1563,63 @@ public class GameFXMLController extends Controller implements Initializable {
                     int color = pspAux.colorCarta;
                     int jugador = pspAux.jugador;
                     ArrayList<Carta> pilaColor = logical.getPlayers().get(jugador-1).getJuegoPropio().get(color);
-                    System.out.println("Hola?");
                     if(pilaColor.size() == 1)
                     {
-                        System.out.println("1 carta");
+                        for(Jugador je : jugadoresEnemigos)
+                        {
+                            if(je.mesa == jugador)
+                            {
+                                je.getJuegoPropio().get(color).add(cartaSeleccionada);
+                                jugadorPropio.getMano().remove(cartaSeleccionada);
+                                mesaPropia.getChildren().remove(cartaSeleccionadaIV);
+                                cartaSeleccionadaIV.setRotate(13);
+                                cartaSeleccionadaIV.setOpacity(1);
+                                pspAux.getChildren().add(cartaSeleccionadaIV);
+                                tomarCarta(1);
+                                pasarDeTurno();
+                            }
+                        }
                     }
                     else
                     {
-                        System.out.println("Mas igual");
+                        if(pilaColor.get(1) instanceof Virus)
+                        {
+                            for(Jugador je : jugadoresEnemigos)
+                            {
+                                if(je.mesa == jugador)
+                                {
+                                    logical.cartasDesechas.addAll(je.getJuegoPropio().get(color));
+                                    logical.cartasDesechas.add(cartaSeleccionada);
+                                    je.getJuegoPropio().get(color).clear();
+                                    jugadorPropio.getMano().remove(cartaSeleccionada);
+                                    mesaPropia.getChildren().remove(cartaSeleccionadaIV);
+                                    cartaSeleccionadaIV.setRotate(13);
+                                    cartaSeleccionadaIV.setOpacity(1);
+                                    pspAux.getChildren().add(cartaSeleccionadaIV);
+                                    tomarCarta(1);
+                                    pasarDeTurno();
+                                }
+                            }
+                        }
+                        else if(pilaColor.get(1) instanceof Medicina)
+                        {
+                            for(Jugador je : jugadoresEnemigos)
+                            {
+                                if(je.mesa == jugador)
+                                {
+                                    logical.cartasDesechas.add(je.getJuegoPropio().get(color).get(1));
+                                    logical.cartasDesechas.add(cartaSeleccionada);
+                                    je.getJuegoPropio().get(color).remove(1);
+                                    jugadorPropio.getMano().remove(cartaSeleccionada);
+                                    mesaPropia.getChildren().remove(cartaSeleccionadaIV);
+                                    cartaSeleccionadaIV.setRotate(13);
+                                    cartaSeleccionadaIV.setOpacity(1);
+                                    pspAux.getChildren().add(cartaSeleccionadaIV);
+                                    tomarCarta(1);
+                                    pasarDeTurno();
+                                }
+                            }
+                        }
                     }
                 }
             }

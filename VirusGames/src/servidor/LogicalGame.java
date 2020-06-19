@@ -168,14 +168,6 @@ public final class LogicalGame implements Serializable{
                 mano.add(carta);
                 mazo.remove(0);
             }
-//            Carta carta = new Organo(1, "O1", 1);
-//            carta.jugador = x;
-//            mano.add(carta);
-//            mazo.remove(0);
-//            carta = new Organo(2, "O2", 1);
-//            carta.jugador = x;
-//            mano.add(carta);
-//            mazo.remove(0);
             Jugador player = new Jugador(mano, x);
             players.add(player);
         }
