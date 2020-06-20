@@ -19,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,7 +40,6 @@ import servidor.Jugador;
 import virusgames.serviceconexion.Cliente;
 import virusgames.util.AppContext;
 import virusgames.util.FlowController;
-import virusgames.util.Mensaje;
 
 /**
  * FXML Controller class
@@ -1524,6 +1522,32 @@ public class GameFXMLController extends Controller implements Initializable {
 
     public void ejecutarTratamiento() {
         System.out.println("Tratamiento");
+        
+        if(jugadorTurno == turnoActual.getValue()) {
+            if(!cartaSeleccionada.isPlayed) {
+                Tratamiento tratamiento = (Tratamiento) cartaSeleccionada;
+                switch(tratamiento.tipoTratamiento) {
+                    case 1:
+                        
+                        break;
+                    case 2:
+                        
+                        break;
+                    case 3:
+                        
+                        break;
+                    case 4:
+                        
+                        break;
+                    case 5:
+                        
+                        break;
+                    default:
+                        //default
+                        break;
+                }
+            }
+        }
     }
 
     public void moverComodin() {
