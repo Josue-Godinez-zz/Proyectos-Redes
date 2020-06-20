@@ -19,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,6 +41,7 @@ import servidor.Jugador;
 import virusgames.serviceconexion.Cliente;
 import virusgames.util.AppContext;
 import virusgames.util.FlowController;
+import virusgames.util.Mensaje;
 
 /**
  * FXML Controller class
@@ -183,7 +185,17 @@ public class GameFXMLController extends Controller implements Initializable {
                 cargarLogical();
                 if(turnoActual.getValue() == jugadorTurno)
                 {
-                    //new Mensaje().show(Alert.AlertType.INFORMATION, "", "Es Tu Turno");
+                    new Mensaje().show(Alert.AlertType.INFORMATION, "", "Es Tu Turno");
+                }
+                if(logical.isGameFinished){
+                    if(turnoActual.getValue()-1 != jugadorTurno ) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Has Perdido", btnDrawCard.getScene().getWindow(),"Has perdido la partida!\nDuh!");
+                        this.getStage().close();
+                    }
+                    else {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Has Ganado", btnDrawCard.getScene().getWindow(),"Has ganado la partida!\nHurra!");
+                        this.getStage().close();
+                    }
                 }
             });
             
@@ -1687,6 +1699,7 @@ public class GameFXMLController extends Controller implements Initializable {
         logical.nuevoTurno();
         turnoActual.set(logical.turno);
         LogicalGame newLogical = new LogicalGame(logical);
+        comprobarPartida();
         cliente.pasarDeTurno(newLogical);
         logical = null;
     }
@@ -1694,5 +1707,19 @@ public class GameFXMLController extends Controller implements Initializable {
     @FXML
     private void OnActionbtnAyuda(ActionEvent event) {
         FlowController.getInstance().goViewInWindowModal("ayudaView", (Stage) btnAyuda.getScene().getWindow(), false);
+    }
+    
+    public void comprobarPartida(){
+        //Viva las 5tillizas
+        int aux = 0;
+        for(int i = 0; i < 5; i++){
+            if(jugadorPropio.getCondicionColor().get(i)){
+                aux++;
+            }
+        }
+        if(aux >= 4) {
+            logical.isGameFinished = true;
+        }
+        
     }
 }
